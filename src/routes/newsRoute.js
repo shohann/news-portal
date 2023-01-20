@@ -1,7 +1,7 @@
 const router = require('express').Router();
-const { getAllNews } = require('../controllers/newsController')
+const { setNews } = require('../controllers/newsController')
 
 router.route('/')
-    .get(getAllNews)
+    .post(setNews)
 
 module.exports = router;

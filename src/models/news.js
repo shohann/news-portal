@@ -14,6 +14,11 @@ module.exports.News = model(
         publishTime: { 
             type: Date, 
             default: Date.now 
+        },
+        ///
+        publisher: {
+            type: Schema.Types.ObjectId,
+            ref: 'User'
         }
     })
 );

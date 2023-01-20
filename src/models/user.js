@@ -8,6 +8,12 @@ module.exports.User = model(
             type: String,
             unique: true
         },
-        password: String
+        password: String,
+        news: [
+            {
+                type: Schema.Types.ObjectId,
+                ref: 'News'
+            }
+        ]
     })
 );

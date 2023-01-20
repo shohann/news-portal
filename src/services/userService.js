@@ -9,3 +9,12 @@ module.exports.fetchUserByEmail = async (email) => {
     return await User.findOne({ email: email })
 };
 
+module.exports.updateUsersNewsById = async (newsId, id) => {
+    return await User.updateOne({
+        _id: id
+    },{
+        $push: {
+            news: newsId
+        }
+    });
+}
