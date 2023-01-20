@@ -9,6 +9,12 @@ module.exports.User = model(
             unique: true
         },
         password: String,
+        comments: [
+            {
+                type: Schema.Types.ObjectId,
+                ref: 'Comment'
+            }
+        ],
         news: [
             {
                 type: Schema.Types.ObjectId,

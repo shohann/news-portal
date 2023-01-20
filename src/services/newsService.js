@@ -5,5 +5,16 @@ module.exports.createNews =  async (news) => {
     return await newNews.save();
 }
 
+// id -> newsId
+module.exports.updateNewsCommentsById = async (commentId, newsId) => {
+    return await News.updateOne({
+        _id: newsId
+    },{
+        $push: {
+            comments: commentId
+        }
+    });
+};
+
 
 

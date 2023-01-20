@@ -6,11 +6,13 @@ const DBUrl = getDBUrl()
 const { DBInit }  = require('./src/utils/DBInit');
 const userRoute = require('./src/routes/userRoute');
 const newsRoute = require('./src/routes/newsRoute');
+const commentRoute = require('./src/routes/commentRoute')
 
 app.use(express.json()); 
 app.use(express.urlencoded({ extended: true }));
 app.use('/api/users', userRoute);
 app.use('/api/news', newsRoute);
+app.use('/api/comments', commentRoute)
 
 app.listen(port, async () => {
     try {
