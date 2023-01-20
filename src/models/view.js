@@ -5,7 +5,7 @@ const { Schema, model } = require('mongoose');
 //     Schema({
 //         count: {
 //             type: number,
-//             requred: true,
+//             default: 0,
 //         },
 //         news: {
 //             type: Schema.Types.ObjectId,
