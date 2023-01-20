@@ -20,3 +20,14 @@ module.exports.setNews = async (req, res) => {
         res.send(error);
     }
 }
+
+module.exports.getNews = async (req, res) => {
+    const newsId = req.params.newsId;
+
+    try {
+        res.send('working');
+    } catch (error) {
+        console.log(error);
+        res.send(error);
+    }
+}
