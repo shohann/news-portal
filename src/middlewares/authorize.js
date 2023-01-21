@@ -9,8 +9,9 @@ module.exports.authorize =  (req, res, next) => {
         req.user = decoded;
         next();
     } catch(error) {
-        if (error.name === 'TokenExpiredError') return res.status(401).json('Invalid Token');
+        if (error.name === 'TokenExpiredError') return res.status(401).json('Token Expired');
         else if (error.name === 'TypeError') return res.status(401).send('Access denied.No token provided');
+        else if (error.name === 'JsonWebTokenError') return res.status(401).json('Invalid Token');
         else return res.status(500).send('Internal server error');
     }
 };

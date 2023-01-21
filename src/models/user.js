@@ -14,6 +14,7 @@ module.exports.User = model(
             enum: ['user', 'admin', 'publisher'],
             default: 'user'
         },
+        
         comments: [
             {
                 type: Schema.Types.ObjectId,

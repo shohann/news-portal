@@ -15,6 +15,15 @@ module.exports.News = model(
             type: Date, 
             default: Date.now 
         },
+        approval: {
+            status: {
+                type: Boolean,
+                default: false
+            },
+            adminId: {
+                type: Schema.Types.ObjectId,
+            }
+        },
         publisher: {
             type: Schema.Types.ObjectId,
             ref: 'User'
