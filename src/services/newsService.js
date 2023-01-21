@@ -25,7 +25,6 @@ module.exports.updateNewsApprovalById = async (newsId, adminId) => {
         _id: newsId
     },{
         $set: {
-            
             "approval.status": true,
             "approval.adminId": adminId
         }
