@@ -9,6 +9,11 @@ module.exports.User = model(
             unique: true
         },
         password: String,
+        role: {
+            type: String,
+            enum: ['user', 'admin', 'publisher'],
+            default: 'user'
+        },
         comments: [
             {
                 type: Schema.Types.ObjectId,

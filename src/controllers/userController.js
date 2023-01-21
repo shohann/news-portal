@@ -16,7 +16,7 @@ module.exports.signUp = async (req, res) => {
             email: email,
             password: hashedPassword
         });
-        const token = generateAccessToken(newUser._id, email)
+        const token = generateAccessToken(newUser._id, email, newUser.role)
         res.send(token);
     } catch (error) {
         if (error.code === '11000') {
@@ -40,7 +40,7 @@ module.exports.logIn = async (req, res) => {
             // throw new Error('Invalid email or password', { cause: 'InvalidCredentials' })
         }
 
-        const token = generateAccessToken(user._id,user.email)
+        const token = generateAccessToken(user._id,user.email, user.role)
         res.send(token) ;
     } catch (error) {
         if (error.name === 'InvalidEmailPassword') {
