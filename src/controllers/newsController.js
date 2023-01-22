@@ -1,4 +1,4 @@
-const { createNews, fetchNewsById, updateNewsApprovalById } = require('../services/newsService');
+const { createNews, fetchNewsById, updateNewsApprovalById, fetchAllNews } = require('../services/newsService');
 const { updateUsersNewsById } = require('../services/userService');
 const { updateCategoriesNewsById } = require('../services/categoryService')
 
@@ -29,6 +29,17 @@ module.exports.getNews = async (req, res) => {
     try {
         const news = await fetchNewsById(newsId)
         res.send(news);
+    } catch (error) {
+        console.log(error);
+        res.send(error);
+    }
+}
+
+module.exports.getAllNewsPage = async (req, res) => {
+    try {
+        const news = await fetchAllNews();
+        // console.log(news);
+        res.status(200).render('home');
     } catch (error) {
         console.log(error);
         res.send(error);

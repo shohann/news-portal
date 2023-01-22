@@ -2,7 +2,17 @@ const { createUser, fetchUserByEmail } = require('../services/userService');
 const { generateAccessToken } = require('../utils/jwt');
 const { getSaltRounds } = require('../utils/configs');
 const { genSalt, hash, compare } = require('bcrypt');
-const { setCustomError } = require('../utils/appError')
+const { setCustomError } = require('../utils/appError');
+
+module.exports.signUpPage = async (req, res) => {
+
+    try {
+        res.status(200).render('signup');
+    } catch (error) {
+        console.log(error);
+        res.send(error)
+    }
+}
 
 module.exports.signUp = async (req, res) => {
     const name = req.body.name;
@@ -28,6 +38,16 @@ module.exports.signUp = async (req, res) => {
     }
 }
 
+module.exports.logInPage = async (req, res) => {
+
+    try {
+        res.status(200).render('login');
+    } catch (error) {
+        console.log(error);
+        res.send(error)
+    }
+}
+
 module.exports.logIn = async (req, res, next) => {
     const email = req.body.email;
     const password = req.body.password;
@@ -49,3 +69,12 @@ module.exports.logIn = async (req, res, next) => {
         }
     }
 };
+
+module.exports.getAdminDashboardPage = async (req, res) => {
+    try {
+        res.status(200).render('admin-dashboard');
+    } catch (error) {
+        console.log(error);
+        res.send(error)
+    }
+}

@@ -9,6 +9,10 @@ module.exports.fetchNewsById = async (newsId) => {
     return await News.findOne({ _id: newsId })
 };
 
+module.exports.fetchAllNews = async () => {
+    return News.find();
+}
+
 
 module.exports.updateNewsCommentsById = async (commentId, newsId) => {
     return await News.updateOne({

@@ -1,0 +1,19 @@
+
+<%- include('partials/header'); -%>
+
+<form class="auth-form " action="/signup">
+  <h2 class="auth-form-header">Sign up</h2>
+  
+  <label class="auth-label" for="name">Name</label>
+  <input class="auth-input" type="text" name="name" required />
+
+  <label class="auth-label" for="email">Email</label>
+  <input class="auth-input" type="text" name="email" required />
+  <div class="email error"></div>
+  <label class="auth-label" for="password">Password</label>
+  <input class="auth-input" type="password" name="password" required />
+  <div class="password error"></div>
+  <button>Sign up</button>
+</form>
+
+<%- include('partials/footer'); -%>

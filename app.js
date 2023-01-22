@@ -1,4 +1,5 @@
 const express = require('express');
+const path = require('path');
 const { getPort, getDBUrl } = require('./src/utils/configs')
 const app = express();
 const port = getPort();
@@ -9,12 +10,16 @@ const newsRoute = require('./src/routes/newsRoute');
 const commentRoute = require('./src/routes/commentRoute');
 const categoryRoute = require('./src/routes/categoryRoute');
 
+app.use(express.static('public'))
 app.use(express.json()); 
 app.use(express.urlencoded({ extended: true }));
 app.use('/api/users', userRoute);
 app.use('/api/news', newsRoute);
 app.use('/api/comments', commentRoute);
 app.use('/api/categories', categoryRoute);
+
+app.set('views', './src/views');
+app.set('view engine', 'ejs');
 
 app.all('*', (req, res, next) => {
     res.status(404).json({
