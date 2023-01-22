@@ -7,7 +7,7 @@ const { DBInit }  = require('./src/utils/DBInit');
 const userRoute = require('./src/routes/userRoute');
 const newsRoute = require('./src/routes/newsRoute');
 const commentRoute = require('./src/routes/commentRoute');
-const categoryRoute = require('./src/routes/categoryRoute')
+const categoryRoute = require('./src/routes/categoryRoute');
 
 app.use(express.json()); 
 app.use(express.urlencoded({ extended: true }));
