@@ -16,6 +16,24 @@ app.use('/api/news', newsRoute);
 app.use('/api/comments', commentRoute);
 app.use('/api/categories', categoryRoute);
 
+app.all('*', (req, res, next) => {
+    res.status(404).json({
+      status: 'fail',
+      message: `Can't find ${req.originalUrl} on this server!`
+    });
+});
+
+app.use((err, req, res, next) => {
+    if (!err.status || !err.message) {
+        err.status = 500;
+        err.message = `Internal Server Error: ${err}`
+    }
+
+    res.status(err.status).json({
+        message: err.message,
+    });
+});
+
 app.listen(port, async () => {
     try {
         await DBInit(DBUrl);

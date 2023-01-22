@@ -2,6 +2,7 @@ const { createUser, fetchUserByEmail } = require('../services/userService');
 const { generateAccessToken } = require('../utils/jwt');
 const { getSaltRounds } = require('../utils/configs');
 const { genSalt, hash, compare } = require('bcrypt');
+const { setCustomError } = require('../utils/appError')
 
 module.exports.signUp = async (req, res) => {
     const name = req.body.name;
@@ -27,29 +28,24 @@ module.exports.signUp = async (req, res) => {
     }
 }
 
-module.exports.logIn = async (req, res) => {
+module.exports.logIn = async (req, res, next) => {
     const email = req.body.email;
     const password = req.body.password;
+    
     try {
         const user = await fetchUserByEmail(email);
-
-        if (!user || !(await compare(password, user.password))) {
-            const e = new Error('Invalid email or password')
-            e.name = "InvalidEmailPassword";
-            throw e;
-            // throw new Error('Invalid email or password', { cause: 'InvalidCredentials' })
-        }
-
-        const token = generateAccessToken(user._id,user.email, user.role)
-        res.send(token) ;
+        if (!user || !(await compare(password, user.password))) throw setCustomError("InvalidEmailPassword", 401, "Invalid email or password");
+        const token = generateAccessToken(user._id,user.email, user.role);
+        res.status(200).json({
+            success: true,
+            token: token
+        });
     } catch (error) {
         if (error.name === 'InvalidEmailPassword') {
-            console.log(error.message);
-            res.send(error.message)
+            next(error);
         } else {
-            console.log('Internal server error');
-            res.send('Internal server error')
+            error.isOperational = false;
+            next(error);
         }
-        
     }
-}   
+};
