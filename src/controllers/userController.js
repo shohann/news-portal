@@ -77,4 +77,13 @@ module.exports.getAdminDashboardPage = async (req, res) => {
         console.log(error);
         res.send(error)
     }
+};
+
+module.exports.getPublisherDashboardPage = async (req, res) => {
+    try {
+        res.status(200).render('publisher-dashboard');
+    } catch (error) {
+        console.log(error);
+        res.send(error);
+    }
 }

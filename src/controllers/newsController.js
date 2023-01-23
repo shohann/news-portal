@@ -1,6 +1,15 @@
 const { createNews, fetchNewsById, updateNewsApprovalById, fetchAllNews } = require('../services/newsService');
 const { updateUsersNewsById } = require('../services/userService');
-const { updateCategoriesNewsById } = require('../services/categoryService')
+const { updateCategoriesNewsById } = require('../services/categoryService');
+
+module.exports.setNewsPage = async (req, res) => {
+    try {
+        res.status(200).render('add-news-form')
+    } catch (error) {
+        console.log(error);
+        res.send(error)
+    }
+}
 
 module.exports.setNews = async (req, res) => {
     const header = req.body.header;
@@ -38,8 +47,8 @@ module.exports.getNews = async (req, res) => {
 module.exports.getAllNewsPage = async (req, res) => {
     try {
         const news = await fetchAllNews();
-        // console.log(news);
-        res.status(200).render('home');
+        console.log(news);
+        res.status(200).render('home', { news: news });
     } catch (error) {
         console.log(error);
         res.send(error);
