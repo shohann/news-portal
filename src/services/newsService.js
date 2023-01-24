@@ -1,5 +1,18 @@
 const { News } = require('../models/news');
 
+module.exports.searchNewsDB = async (arg) => {
+    return await News.aggregate()
+                     .search({
+                        index: "searchNews",
+                        text: {
+                            query: arg,
+                            path: ["header", "newsText"],
+                            fuzzy: {}
+                         }
+    })
+};
+
+
 module.exports.createNews =  async (news) => {
     const newNews = new News(news);
     return await newNews.save();

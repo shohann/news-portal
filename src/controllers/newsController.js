@@ -1,7 +1,19 @@
-const { createNews, fetchNewsById, updateNewsApprovalById, fetchAllNews } = require('../services/newsService');
+const { createNews, fetchNewsById, updateNewsApprovalById, fetchAllNews, searchNewsDB } = require('../services/newsService');
 const { updateUsersNewsById } = require('../services/userService');
 const { updateCategoriesNewsById } = require('../services/categoryService');
 const { fetchAllCategory, fetchCategory } = require('../services/categoryService');
+const { connection } = require('mongoose');
+
+module.exports.searchNews = async (req, res) => {
+    const arg = req.body.arg
+    try {
+        const result = await searchNewsDB(arg)
+        res.status(200).send(result);
+    } catch (error) {
+        console.log(error);
+        res.send(error)
+    }
+}
 
 module.exports.setNewsPage = async (req, res) => {
     try {
@@ -37,6 +49,7 @@ module.exports.setNews = async (req, res) => {
         console.log(error);
         res.send(error);
     }
+
 }
 
 module.exports.getNews = async (req, res) => {

@@ -1,8 +1,10 @@
 const router = require('express').Router();
-const { setNews, getNews, modifyNewsApproval,getAllNewsPage, setNewsPage } = require('../controllers/newsController');
+const { setNews, getNews, modifyNewsApproval,getAllNewsPage, setNewsPage, searchNews } = require('../controllers/newsController');
 const { authorize, admin } = require('../middlewares/authorize');
 
 // /all -> For home page
+router.route('/search')
+    .post(searchNews)
 
 router.route('/')
     .post(authorize, admin, setNews) // -> for publisher only
