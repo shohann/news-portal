@@ -3,6 +3,7 @@ const { generateAccessToken } = require('../utils/jwt');
 const { getSaltRounds } = require('../utils/configs');
 const { genSalt, hash, compare } = require('bcrypt');
 const { setCustomError } = require('../utils/appError');
+const maxAge = 3 * 24 * 60 * 60;
 
 module.exports.signUpPage = async (req, res) => {
 
@@ -27,7 +28,8 @@ module.exports.signUp = async (req, res) => {
             email: email,
             password: hashedPassword
         });
-        const token = generateAccessToken(newUser._id, email, newUser.role)
+        const token = generateAccessToken(newUser._id, email, newUser.role);
+        res.cookie('jwt', token, { httpOnly: true, maxAge: maxAge * 1000 });
         res.send(token);
     } catch (error) {
         if (error.code === '11000') {
@@ -56,6 +58,7 @@ module.exports.logIn = async (req, res, next) => {
         const user = await fetchUserByEmail(email);
         if (!user || !(await compare(password, user.password))) throw setCustomError("InvalidEmailPassword", 401, "Invalid email or password");
         const token = generateAccessToken(user._id,user.email, user.role);
+        res.cookie('jwt', token, { httpOnly: true, maxAge: maxAge * 1000 });
         res.status(200).json({
             success: true,
             token: token
@@ -69,6 +72,11 @@ module.exports.logIn = async (req, res, next) => {
         }
     }
 };
+
+module.exports.logout = (req, res) => {
+    res.cookie('jwt', '', { maxAge: 1 });
+    res.redirect('/api/users/login');
+}
 
 module.exports.getAdminDashboardPage = async (req, res) => {
     try {
@@ -87,3 +95,4 @@ module.exports.getPublisherDashboardPage = async (req, res) => {
         res.send(error);
     }
 }
+

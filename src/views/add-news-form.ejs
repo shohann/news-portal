@@ -2,19 +2,63 @@
 
 <%- include('partials/admin-dashboard-sidebar'); -%>
 
-<form class="auth-form" action="/signup">
-    <label class="auth-label" for="email">Title</label>
-    <input class="auth-input" type="text" name="email"  />
 
-    <label class="auth-label" for="password">Category</label>
-    <input class="auth-input" type="text" name="password"  />
 
-    <label class="auth-label" for="password">News Article</label>
-    <input class="auth-input" type="text" name="password"  />
+<div>
+    <h1 style="text-align: center;padding: 40px; border-bottom: 2px solid black; color: white;">ADD NEWS</h1>
+</div>
+
+<form id="add-news" class="news-form">
+
+    <p><%= categories[0].categoryName %></p>
+    <label class="news-label" for="title">Title</label>
+    <input class="news-input" type="text" name="title"  />
+
+    <label class="news-label" for="category">Category</label>
+    <select id="category" name="category">
+        <% for(let i = 0; i < categories.length; i++ ){ %>
+            <option value="<%= categories[i].categoryName %>"><%= categories[i].categoryName %></option>
+        <% } %>
+
+        <!-- <option value="ACHIEVEMENT">Achievement Test</option>
+        <option value="PERSONALITY">Personality Test</option>
+        <option value="PSYCHOLOGICAL">Psychological Test</option>
+        <option value="IQ">IQ Test</option> -->
+    </select>
+
+    <label class="news-label" for="article">News Article</label>
+    <input class="article-input" type="text" name="article"  />
 
     <br>
     <br>
-    <button>Submit</button>
+    <button class="submit-btn">Submit</button>
 </form>
 
 <!-- File & Drop Down Category -->
+
+<script>
+    const newsForm = document.getElementById('add-news');
+
+    newsForm.addEventListener('submit', async function(e) {
+        e.preventDefault();
+
+        const header = e.target[0].value;
+        const categoryName = e.target[1].value;
+        const newsText = e.target[2].value
+
+
+        try {
+            const res = await fetch('/api/news', { 
+                method: 'POST', 
+                body: JSON.stringify({ header, newsText, categoryName }),
+                headers: {'Content-Type': 'application/json'}
+            });
+
+            const data = await res.json();
+            console.log(data);
+        } catch (error) {
+            console.log(error);
+        }
+    })
+
+</script>

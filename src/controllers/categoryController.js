@@ -1,4 +1,13 @@
-const { createCategory } = require('../services/categoryService')
+const { createCategory } = require('../services/categoryService');
+
+module.exports.getCategoryPage = async (req, res) => {
+    try {
+        res.status(200).render('categories')
+    } catch (error) {
+        console.log(error);
+        res.send(error)
+    }
+};
 
 module.exports.setCategory = async (req, res) => {
     const categoryName = req.body.categoryName;
@@ -11,4 +20,4 @@ module.exports.setCategory = async (req, res) => {
         console.log(error);
         res.send(error)
     }
-}
+};

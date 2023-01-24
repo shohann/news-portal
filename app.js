@@ -1,5 +1,5 @@
 const express = require('express');
-const path = require('path');
+const cookieParser = require('cookie-parser');
 const { getPort, getDBUrl } = require('./src/utils/configs')
 const app = express();
 const port = getPort();
@@ -9,10 +9,12 @@ const userRoute = require('./src/routes/userRoute');
 const newsRoute = require('./src/routes/newsRoute');
 const commentRoute = require('./src/routes/commentRoute');
 const categoryRoute = require('./src/routes/categoryRoute');
+const { default: mongoose } = require('mongoose');
 
 app.use(express.static('public'))
 app.use(express.json()); 
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 app.use('/api/users', userRoute);
 app.use('/api/news', newsRoute);
 app.use('/api/comments', commentRoute);
@@ -45,6 +47,7 @@ app.listen(port, async () => {
         console.log('Database connected...');
         console.log(`listening on port ${port}`);
     } catch (error) {
+
         console.log(error);
     }
 });

@@ -1,10 +1,14 @@
 const { createNews, fetchNewsById, updateNewsApprovalById, fetchAllNews } = require('../services/newsService');
 const { updateUsersNewsById } = require('../services/userService');
 const { updateCategoriesNewsById } = require('../services/categoryService');
+const { fetchAllCategory, fetchCategory } = require('../services/categoryService');
 
 module.exports.setNewsPage = async (req, res) => {
     try {
-        res.status(200).render('add-news-form')
+        const categories = await fetchAllCategory();
+        // console.log(categories[0]._id.toString());
+        // console.log(categories);
+        res.status(200).render('add-news-form', { categories: categories })
     } catch (error) {
         console.log(error);
         res.send(error)
@@ -14,13 +18,16 @@ module.exports.setNewsPage = async (req, res) => {
 module.exports.setNews = async (req, res) => {
     const header = req.body.header;
     const newsText = req.body.newsText;
-    const userId = req.user.id
-
+    const categoryName = req.body.categoryName;
+    const userId = req.user.id;
+//   '63cbe979d6bc3827b412d8f8'
     try {
+        // Transaction with specific error 
+        const category = await fetchCategory(categoryName) // in failure it throw DocumentNotFoundError error.We have to handle it with extending error class
         const news = await createNews({
             header: header,
             newsText: newsText,
-            category: '63cbe979d6bc3827b412d8f8',
+            category: category._id,
             publisher: userId
         });
         await updateUsersNewsById(news._id, userId);
@@ -47,7 +54,6 @@ module.exports.getNews = async (req, res) => {
 module.exports.getAllNewsPage = async (req, res) => {
     try {
         const news = await fetchAllNews();
-        console.log(news);
         res.status(200).render('home', { news: news });
     } catch (error) {
         console.log(error);
@@ -67,3 +73,4 @@ module.exports.modifyNewsApproval = async (req, res) => {
         res.send(error);
     }
 }
+

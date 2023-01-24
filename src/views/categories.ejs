@@ -1,0 +1,90 @@
+<%- include('partials/admin-dashboard-sidebar'); -%>
+
+<div class="main">
+  
+    <h2 style="text-align: center;">Categories</h2>
+    
+    <br>
+    <br>
+    <div style="padding-left: 1px;">
+      <button class="submit-btn" type="button"  id="create-btn" style="display: block;"> Create </button>
+
+      <div id="new-category" style="display: none; ">
+        <input class="category-input"  type="text" name="category"placeholder="Category Name" id="category-input">
+        <button class="submit-btn" type="button" id="category-submit"> Submit </button>
+        <button class="submit-btn"  type="button" id="cancel-new"> Cancel </button>
+      </div>
+    </div>
+
+
+    <table>
+      <thead>
+        <tr>
+          <th>Category Name</th>
+          <th>Number of News</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td data-column="First Name">James</td>
+          <td data-column="Last Name">Matman</td>
+   
+        </tr>
+        <tr>
+          <td data-column="First Name">Andor</td>
+          <td data-column="Last Name">Nagy</td>
+
+        </tr>
+        
+      </tbody>
+    </table>
+  </div>
+</body>
+</html> 
+  
+
+<script>
+  const createButton = document.getElementById('create-btn');
+	const cancelButton = document.getElementById('cancel-new');
+	const newCategory = document.getElementById('new-category');
+	const categoryInput = document.getElementById('category-input');
+	const submitCategory = document.getElementById('category-submit');
+
+  if (createButton) {
+		createButton.addEventListener('click', (e) => {
+			if (createButton === null) {
+				console.log('Its NULL');
+			}
+			createButton.style.display = 'none';
+			newCategory.style.display = 'block';
+		});
+	}
+	if (cancelButton) {
+		cancelButton.addEventListener('click', (e) => {
+			createButton.style.display = 'block';
+			newCategory.style.display = 'none';
+		})
+	}
+	if (submitCategory) {
+		submitCategory.addEventListener('click', async (e) => {
+			const categoryName = categoryInput.value;
+      console.log(categoryName);
+			try {
+				const res = await fetch('/api/categories', { 
+					method: 'POST', 
+					body: JSON.stringify({ categoryName }),
+					headers: {'Content-Type': 'application/json'}
+				});
+				const data = await res.json();
+				if (data) {
+					location.assign('/api/users/admin/dashboard');
+				}
+				}
+				catch (err) {
+				console.log(err);
+			}
+		});
+	}
+
+
+</script>
