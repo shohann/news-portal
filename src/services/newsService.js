@@ -1,9 +1,20 @@
 const { News } = require('../models/news');
 
-module.exports.createNews =  async (news) => {
+// module.exports.createNews =  async (news) => {
+//     const newNews = new News(news);
+//     return await newNews.save();
+// };
+
+
+// With Transaction
+module.exports.createNews =  async (news, session) => {
     const newNews = new News(news);
-    return await newNews.save();
+    return await newNews.save({ session });
 };
+// module.exports.createNews = async (news, session) => {
+//     return await News.create(news, null, { session: session });
+// };
+
 
 module.exports.fetchNewsById = async (newsId) => {
     return await News.findOne({ _id: newsId })
@@ -11,7 +22,7 @@ module.exports.fetchNewsById = async (newsId) => {
 
 module.exports.fetchAllNews = async () => {
     return News.find();
-}
+};
 
 // module.exports.fetchPartialResult = async (arg) => {
 //     return await News.aggregate()

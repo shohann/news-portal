@@ -2,9 +2,7 @@ const { createNews, fetchNewsById, updateNewsApprovalById, fetchAllNews, fetchPa
 const { updateUsersNewsById } = require('../services/userService');
 const { updateCategoriesNewsById } = require('../services/categoryService');
 const { fetchAllCategory, fetchCategory } = require('../services/categoryService');
-// const { connection } = require('mongoose');
-
-
+const { runInTransaction } = require('../services/databaseTransaction');
 
 module.exports.setNewsPage = async (req, res) => {
     try {
@@ -17,29 +15,28 @@ module.exports.setNewsPage = async (req, res) => {
 };
 
 module.exports.setNews = async (req, res) => {
-    const header = req.body.header;
-    const newsText = req.body.newsText;
-    const categoryName = req.body.categoryName;
+    const { header, newsText, categoryName } = req.body;
     const userId = req.user.id;
-//   '63cbe979d6bc3827b412d8f8'
-    try {
-        // Transaction with specific error 
-        const category = await fetchCategory(categoryName) // in failure it throw DocumentNotFoundError error.We have to handle it with extending error class
-        const news = await createNews({
-            header: header,
-            newsText: newsText,
-            category: category._id,
-            publisher: userId
+
+    try { 
+        await runInTransaction(async (session) => {
+            const category = await fetchCategory(categoryName, session) 
+            const news = await createNews({
+                header: header,
+                newsText: newsText,
+                category: category._id,
+                publisher: userId
+            }, session);
+            await updateUsersNewsById(news._id, userId, session);
+            await updateCategoriesNewsById(news.category, news._id, session);
         });
-        await updateUsersNewsById(news._id, userId);
-        await updateCategoriesNewsById(news.category, news._id)
-        res.send(news)
+        res.status(201).json({ msg: 'News Successfully created' });
     } catch (error) {
+        // tr a errr hole seta ekhane asbe re throw hoa
         console.log(error);
         res.send(error);
     }
-
-}
+};
 
 module.exports.getNews = async (req, res) => {
     const newsId = req.params.newsId;
@@ -65,6 +62,7 @@ module.exports.getAllNewsPage = async (req, res) => {
 
 module.exports.searchNews = async (req, res) => {
     const arg = req.query.arg;
+    
     try {
         const result = await fetchPartialResult(arg)
         res.status(200).send(result);

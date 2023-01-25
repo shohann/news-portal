@@ -1,7 +1,7 @@
 
 <%- include('partials/header'); -%>
 
-<form class="auth-form " action="/signup">
+<form id="auth"  class="auth-form ">
   <h2 class="auth-form-header">Sign up</h2>
   
   <label class="auth-label" for="name">Name</label>
@@ -13,7 +13,38 @@
   <label class="auth-label" for="password">Password</label>
   <input class="auth-input" type="password" name="password" required />
   <div class="password error"></div>
+  <br>
+  <br>
   <button>Sign up</button>
 </form>
 
 <%- include('partials/footer'); -%>
+
+<script>
+  const authForm = document.getElementById('auth');
+  authForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const name = e.target[0].value;
+    const email = e.target[1].value;
+    const password = e.target[2].value;
+  
+    try {
+      const res = await fetch('/api/users/signup', { 
+        method: 'POST', 
+        body: JSON.stringify({ name, email, password }),
+        headers: {'Content-Type': 'application/json'}
+      });
+      const data = await res.json();
+      console.log(data);
+
+      if (data) {
+        location.assign('/api/news');
+      }
+    }
+    catch (err) {
+      console.log(err.message);
+    }
+
+  });
+</script>

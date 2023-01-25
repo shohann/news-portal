@@ -19,7 +19,8 @@ module.exports.signUp = async (req, res) => {
     const name = req.body.name;
     const email = req.body.email;
     const password = req.body.password;
-
+    // amn user k sign in kora jabe jeta already ase
+    // duplicate er jonno error code kaj korse na
     try {
         const salt = await genSalt(getSaltRounds());
         const hashedPassword = await hash(password, salt);
@@ -30,7 +31,7 @@ module.exports.signUp = async (req, res) => {
         });
         const token = generateAccessToken(newUser._id, email, newUser.role);
         res.cookie('jwt', token, { httpOnly: true, maxAge: maxAge * 1000 });
-        res.send(token);
+        res.send(newUser);
     } catch (error) {
         if (error.code === '11000') {
             res.send('User already have an account');

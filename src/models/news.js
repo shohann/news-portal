@@ -1,5 +1,6 @@
 const { Schema, model } = require('mongoose');
 
+// publisher id and category id is required must
 module.exports.News = model(
     'News', 
     Schema({

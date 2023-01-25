@@ -19,12 +19,23 @@ module.exports.updateUsersNewsById = async (newsId, userId) => {
     });
 };
 
-module.exports.updateUsersCommentsById = async (commentId, userId) => {
+// module.exports.updateUsersCommentsById = async (commentId, userId) => {
+//     return await User.updateOne({
+//         _id: userId
+//     },{
+//         $push: {
+//             comments: commentId
+//         }
+//     });
+// };
+
+// With Transaction
+module.exports.updateUsersCommentsById = async (commentId, userId, session) => {
     return await User.updateOne({
         _id: userId
     },{
         $push: {
             comments: commentId
         }
-    });
+    }, { session: session });
 };
