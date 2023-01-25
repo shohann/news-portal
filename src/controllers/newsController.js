@@ -1,31 +1,20 @@
-const { createNews, fetchNewsById, updateNewsApprovalById, fetchAllNews, searchNewsDB } = require('../services/newsService');
+const { createNews, fetchNewsById, updateNewsApprovalById, fetchAllNews, fetchPartialResult } = require('../services/newsService');
 const { updateUsersNewsById } = require('../services/userService');
 const { updateCategoriesNewsById } = require('../services/categoryService');
 const { fetchAllCategory, fetchCategory } = require('../services/categoryService');
-const { connection } = require('mongoose');
+// const { connection } = require('mongoose');
 
-module.exports.searchNews = async (req, res) => {
-    const arg = req.body.arg
-    try {
-        const result = await searchNewsDB(arg)
-        res.status(200).send(result);
-    } catch (error) {
-        console.log(error);
-        res.send(error)
-    }
-}
+
 
 module.exports.setNewsPage = async (req, res) => {
     try {
         const categories = await fetchAllCategory();
-        // console.log(categories[0]._id.toString());
-        // console.log(categories);
         res.status(200).render('add-news-form', { categories: categories })
     } catch (error) {
         console.log(error);
         res.send(error)
     }
-}
+};
 
 module.exports.setNews = async (req, res) => {
     const header = req.body.header;
@@ -73,6 +62,17 @@ module.exports.getAllNewsPage = async (req, res) => {
         res.send(error);
     }
 }
+
+module.exports.searchNews = async (req, res) => {
+    const arg = req.query.arg;
+    try {
+        const result = await fetchPartialResult(arg)
+        res.status(200).send(result);
+    } catch (error) {
+        console.log(error);
+        res.send(error)
+    }
+};
 
 module.exports.modifyNewsApproval = async (req, res) => {
     const newsId = req.params.newsId;

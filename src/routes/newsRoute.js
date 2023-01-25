@@ -4,7 +4,7 @@ const { authorize, admin } = require('../middlewares/authorize');
 
 // /all -> For home page
 router.route('/search')
-    .post(searchNews)
+    .get(searchNews)
 
 router.route('/')
     .post(authorize, admin, setNews) // -> for publisher only
