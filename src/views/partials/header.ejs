@@ -7,16 +7,34 @@
     </head>
     <body >
       <nav class="header">
-        <h1><a href="/api/news">The Daily News</a></h1>
+        <h1><a href="/">The Daily News</a></h1>
+        
         <div class="header-right">
+          
           <form>
               <input class="search-box" type="text" name="search" placeholder="Search..">
           </form>
-            <a href="/api/users/signup">Sign Up</a>
-            <a href="/api/users/login">Log In</a>
-            <a href="/api/users/admin/dashboard">Admin Dashboard</a>
-            <a href="/api/users/publisher/dashboard">Publisher Dashboard</a>
+
+          <% if (user === null) { %>
+              <a href="/api/users/signup">Sign Up</a>
+              <a href="/api/users/login">Log In</a>
+          <% } else { %>
+              <% if (user.role === 'admin') { %>
+                <a href="/api/users/admin/dashboard">Admin Dashboard</a>
+              <% } %>
+
+              <% if (user.role === 'publisher') { %>
+                <a href="/api/users/publisher/dashboard">Publisher Dashboard</a>
+              <% } %>
+
             <a href="/api/users/logout">Log Out</a>
+          <% } %>
+
+
+
+
+  
+
         </div>
       </nav>
 

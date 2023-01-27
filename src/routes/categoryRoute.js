@@ -1,11 +1,12 @@
 const router = require('express').Router();
+const { authorize } = require('../middlewares/authorize')
 const { setCategory, getCategoryPage, getCategoryNewsPage } = require('../controllers/categoryController');
 
 router.route('/')
-      .get(getCategoryPage) // by admin
-      .post(setCategory) // by admin
+      .get(authorize, getCategoryPage) // by admin
+      .post(authorize, setCategory) // by admin
 
 router.route('/all')
-      .get(getCategoryNewsPage)
+      .get(authorize,getCategoryNewsPage)
 
 module.exports = router;

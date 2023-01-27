@@ -1,17 +1,19 @@
 const router = require('express').Router();
-const { validateUser } = require('../middlewares/validate')
+const { validateUser } = require('../middlewares/validate');
+const { authorize } = require('../middlewares/authorize')
 const { signUp, logIn, logout, signUpPage, logInPage, getAdminDashboardPage, getPublisherDashboardPage } = require('../controllers/userController');
 
+
 router.route('/signup')
-    .get(signUpPage)
+    .get(authorize,signUpPage)
     .post(validateUser, signUp);
 
 router.route('/login')
-    .get(logInPage)
+    .get(authorize,logInPage)
     .post(logIn);
 
 router.route('/logout')
-    .get(logout);
+    .get(authorize,logout);
     
 
 // try also with router.get().because router.route is used for multiple similar type route

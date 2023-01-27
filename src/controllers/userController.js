@@ -42,7 +42,6 @@ module.exports.signUp = async (req, res) => {
 }
 
 module.exports.logInPage = async (req, res) => {
-
     try {
         res.status(200).render('login');
     } catch (error) {
