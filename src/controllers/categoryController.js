@@ -1,4 +1,4 @@
-const { createCategory } = require('../services/categoryService');
+const { createCategory, fetchCategoryNews, fetchAllCategory } = require('../services/categoryService');
 
 module.exports.getCategoryPage = async (req, res) => {
     try {
@@ -8,6 +8,20 @@ module.exports.getCategoryPage = async (req, res) => {
         res.send(error)
     }
 };
+
+module.exports.getCategoryNewsPage = async (req, res) => {
+    const current = req.query.name
+    try {
+        const categories = await fetchAllCategory();
+        const { news }  = await fetchCategoryNews(current);
+        
+        if (!current) return res.status(200).redirect('/')
+        res.status(200).render('category-news', { categories: categories, current: current, news: news });
+    } catch (error) {
+        console.log(error);
+        res.send(error)
+    }
+}
 
 module.exports.setCategory = async (req, res) => {
     const categoryName = req.body.categoryName;

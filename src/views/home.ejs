@@ -1,20 +1,30 @@
 <%- include('partials/header'); -%>
+
 <div class="topnav">
-    <a class="active" href="#home">Home</a>
-    <a href="#news">News</a>
-    <a href="#contact">Contact</a>
-    <a href="#about">About</a>
+    <a style="background-color: #04AA6D;" href="/">Home</a>
+    <% for(let i = 0; i < categories.length; i++ ){ %>
+            <a  href="/api/categories/all?name=<%= categories[i].categoryName %>"><%= categories[i].categoryName %></a>
+    <% } %>
 </div>
 
-<div style="padding: 30px; border: 5px solid black;">
 
+<div style="display: flex; height: 80%;">
 
-    <% for(let i = 0; i < news.length; i++ ){ %>
-        <p><%= news[i].header %></p>
-        <p><%= news[i].category %></p>
-        <br>
-        <br>
-    <% } %>
+    <div style="padding: 30px; border: 5px solid black; width: 70%;">
+        <h1>Latest News</h1>
+    
+        <% for(let i = 0; i < news.length; i++ ){ %>
+            <p><%= news[i].header %></p>
+            <p><%= news[i].category %></p>
+            <br>
+            <br>
+        <% } %>
+    
+    </div>
+    
+    <div  style="padding: 30px; border: 5px solid black; width: 30%;">
+        <h1>Most Viewd</h1>
+    </div>
 
 </div>
 

@@ -51,6 +51,7 @@ module.exports.getNews = async (req, res) => {
 }
 
 module.exports.getAllNewsPage = async (req, res) => {
+    // Home page alternative
     try {
         const news = await fetchAllNews();
         res.status(200).render('home', { news: news });
