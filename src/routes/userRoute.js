@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const { validateUser } = require('../middlewares/validate');
-const { authorize } = require('../middlewares/authorize')
-const { signUp, logIn, logout, signUpPage, logInPage, getAdminDashboardPage, getPublisherDashboardPage } = require('../controllers/userController');
+const { authorize, publisher } = require('../middlewares/authorize')
+const { signUp, logIn, logout, signUpPage, logInPage, getAdminDashboardPage, getPublisherDashboardPage, getPublisherNewsPage } = require('../controllers/userController');
 
 
 router.route('/signup')
@@ -15,6 +15,7 @@ router.route('/login')
 router.route('/logout')
     .get(authorize,logout);
     
+// /dashboard
 
 // try also with router.get().because router.route is used for multiple similar type route
 router.route('/admin/dashboard')
@@ -22,6 +23,9 @@ router.route('/admin/dashboard')
 
 router.route('/publisher/dashboard')
     .get(getPublisherDashboardPage);
+
+router.route('/mynews')
+      .get(authorize, publisher, getPublisherNewsPage);
 
 
 

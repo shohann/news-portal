@@ -1,4 +1,4 @@
-const { createUser, fetchUserByEmail } = require('../services/userService');
+const { createUser, fetchUserByEmail, fetchUsersNewsById } = require('../services/userService');
 const { generateAccessToken } = require('../utils/jwt');
 const { getSaltRounds } = require('../utils/configs');
 const { genSalt, hash, compare } = require('bcrypt');
@@ -6,14 +6,13 @@ const { setCustomError } = require('../utils/appError');
 const maxAge = 3 * 24 * 60 * 60;
 
 module.exports.signUpPage = async (req, res) => {
-
     try {
         res.status(200).render('signup');
     } catch (error) {
         console.log(error);
         res.send(error)
     }
-}
+};
 
 module.exports.signUp = async (req, res) => {
     const name = req.body.name;
@@ -39,7 +38,7 @@ module.exports.signUp = async (req, res) => {
             res.send('Internal Server Error')
         }
     }
-}
+};
 
 module.exports.logInPage = async (req, res) => {
     try {
@@ -48,7 +47,7 @@ module.exports.logInPage = async (req, res) => {
         console.log(error);
         res.send(error)
     }
-}
+};
 
 module.exports.logIn = async (req, res, next) => {
     const email = req.body.email;
@@ -76,11 +75,12 @@ module.exports.logIn = async (req, res, next) => {
 module.exports.logout = (req, res) => {
     res.cookie('jwt', '', { maxAge: 1 });
     res.redirect('/api/users/login');
-}
+};
 
 module.exports.getAdminDashboardPage = async (req, res) => {
     try {
-        res.status(200).render('admin-dashboard');
+        // res.status(200).render('admin-dashboard');
+        res.status(200).redirect('/api/categories');
     } catch (error) {
         console.log(error);
         res.send(error)
@@ -89,10 +89,21 @@ module.exports.getAdminDashboardPage = async (req, res) => {
 
 module.exports.getPublisherDashboardPage = async (req, res) => {
     try {
-        res.status(200).render('publisher-dashboard');
+        // res.status(200).render('publisher-dashboard');
+        res.status(200).redirect('/api/news');
     } catch (error) {
         console.log(error);
         res.send(error);
     }
-}
+};
 
+module.exports.getPublisherNewsPage = async (req, res) => {
+    const userId = req.user.id;
+    try {
+        const { news } = await fetchUsersNewsById(userId);
+        res.status(200).render('my-news', { news: news});
+    } catch (error) {
+        console.log(error);
+        res.send(error)
+    }
+};

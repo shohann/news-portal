@@ -1,0 +1,33 @@
+<%- include('partials/publisher-dashboard-sidebar'); -%>
+
+<div>
+    <h1 style="text-align: center;padding: 40px; border-bottom: 2px solid black; color: black;">My News</h1>
+</div>
+
+<div class="main">
+    <table>
+      <thead>
+        <tr>
+          <th>Title</th>
+          <th>Category</th>
+          <th>Details</th>
+          <th>Approval Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% if (news.length > 0) { %>
+          <% for(let i = 0; i < news.length; i++ ){ %>
+            <tr>
+              <td><%= news[i].header %></td>
+              <td><%= news[i].category.categoryName %></td>
+              <!-- newsId lagbe to access -> /api/news/<%= news[i]._id %> -->
+              <td><a style="border-bottom: 1px solid black;" href="#">View</a></td>
+              <td><%= news[i].approval.status %></td>
+            </tr>
+          <% } %>
+        <% } else { %>
+            <!-- <p>No results</p> -->
+        <% } %>
+      </tbody>
+    </table>
+  </div>

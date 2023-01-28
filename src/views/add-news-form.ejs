@@ -1,11 +1,11 @@
 <!-- Will have sidebar with partials -->
 
-<%- include('partials/admin-dashboard-sidebar'); -%>
+<%- include('partials/publisher-dashboard-sidebar'); -%>
 
 
 
 <div>
-    <h1 style="text-align: center;padding: 40px; border-bottom: 2px solid black; color: white;">ADD NEWS</h1>
+    <h1 style="text-align: center;padding: 40px; border-bottom: 2px solid black; color: black;">ADD NEWS</h1>
 </div>
 
 <form id="add-news" class="news-form">
@@ -56,6 +56,9 @@
 
             const data = await res.json();
             console.log(data);
+            if (data) {
+                location.assign('/')
+            }
         } catch (error) {
             console.log(error);
         }

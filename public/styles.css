@@ -162,7 +162,7 @@ body {
 }
 
 .main {
-  margin-left: 160px; /* Same as the width of the sidenav */
+  margin-left: 170px; /* Same as the width of the sidenav */
   font-size: 28px; /* Increased text to enable scrolling */
   padding: 0px 10px;
 }
@@ -179,7 +179,7 @@ body {
 /* Dashboard Tables */
 
 table { 
-	width: 2350px; 
+	width: 1550px; 
 	border-collapse: collapse; 
 	margin:50px auto;
 	}
@@ -265,7 +265,7 @@ only screen and (max-width: 760px),
 }
 
 .news-form {
-  width: 1590px;
+  width: 1090px;
   margin: 50 auto;
   padding: 30px;
   box-shadow: 1px 2px 3px rgba(0,0,0,0.1);

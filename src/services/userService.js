@@ -5,6 +5,20 @@ module.exports.createUser = async (user) => {
     return await newUser.save();
 };
 
+module.exports.fetchUsersNewsById = async (userId) => {
+    return usersNews = await User.findById(userId)
+                                 .select({ __v: 0, email: 0, password: 0, role: 0, comments: 0, name: 0, _id: 0 })
+                                 .populate({
+                                    path: 'news',
+                                    select:'header _id approval',
+                                    populate: { 
+                                        path: 'category', 
+                                        select:'categoryName'
+                                    }
+                                 })
+                                //  .populate('news')        
+}
+
 module.exports.fetchUserByEmail = async (email) => {
     return await User.findOne({ email: email })
 };
