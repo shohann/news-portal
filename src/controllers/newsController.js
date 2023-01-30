@@ -1,4 +1,7 @@
-const { createNews, fetchNewsById, updateNewsApprovalById, fetchAllNews, fetchPartialResult } = require('../services/newsService');
+const { createNews, fetchNewsById, 
+        updateNewsApprovalById, fetchAllNews, 
+        fetchPartialResult, fetchUnapprovedNews, 
+        fetchApprovedNews, deleteNewsById } = require('../services/newsService');
 const { updateUsersNewsById } = require('../services/userService');
 const { updateCategoriesNewsById } = require('../services/categoryService');
 const { fetchAllCategory, fetchCategory } = require('../services/categoryService');
@@ -83,6 +86,42 @@ module.exports.modifyNewsApproval = async (req, res) => {
     } catch (error) {
         console.log(error);
         res.send(error);
+    }
+};
+
+module.exports.removeNews = async (req, res) => {
+    const newsId = req.params.newsId;
+    try {
+
+        await deleteNewsById(newsId);
+        
+        res.status(200).json({
+            msg: 'deleted'
+        })
+    } catch (error) {
+        console.log(error);
+    }
+};
+
+module.exports.getUnapprovedNewsPage = async (req, res) => {
+    try {
+        const unapprovedNews = await fetchUnapprovedNews();
+        console.log(unapprovedNews);
+        res.status(200).render('unapproved-news', { news: unapprovedNews });
+    } catch (error) {
+        console.log(error);
+        res.send(error)
+    }
+}
+
+module.exports.getApprovedNewsPage = async (req, res) => {
+    try {
+        const approvedNews = await fetchApprovedNews();
+        // console.log(approvedNews);
+        res.status(200).render('approved-news', { news: approvedNews });
+    } catch (error) {
+        console.log(error);
+        res.send(error)
     }
 }
 

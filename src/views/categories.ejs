@@ -20,22 +20,23 @@
     <table>
       <thead>
         <tr>
-          <th>Category Name</th>
-          <th>Number of News</th>
+          <th style="text-align: center;">Category Name</th>
+    
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <td data-column="First Name">James</td>
-          <td data-column="Last Name">Matman</td>
-   
-        </tr>
-        <tr>
-          <td data-column="First Name">Andor</td>
-          <td data-column="Last Name">Nagy</td>
 
-        </tr>
-        
+		<% if (categories.length > 0) { %>
+			<% for(let i = 0; i < categories.length; i++ ){ %>
+				<tr>
+					<td style="text-align: center;" ><%= categories[i].categoryName %></td>
+					<!-- delete button -->
+				</tr>
+			<% } %>
+        <% } else { %>
+              <!-- <p>No results</p> -->
+        <% } %>
+
       </tbody>
     </table>
   </div>

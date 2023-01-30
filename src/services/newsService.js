@@ -81,5 +81,34 @@ module.exports.updateNewsApprovalById = async (newsId, adminId) => {
     });
 };
 
+module.exports.deleteNewsById = async (newsId) => {
+    return await News.deleteOne({ _id: newsId })
+}
+
+module.exports.fetchUnapprovedNews = async () => {
+    return await News.find({ "approval.status": false })
+                     .select({_id: 1, publisher: 1, category: 1})
+                     .populate({
+                        path: 'category' ,
+                        select: 'categoryName'
+                     })
+                     .populate({
+                        path: 'publisher',
+                        select: 'name'
+                     });
+};
+
+module.exports.fetchApprovedNews = async () => {
+    return await News.find({ "approval.status": true })
+                     .select({_id: 1, publisher: 1, category: 1})
+                     .populate({
+                        path: 'category' ,
+                        select: 'categoryName'
+                      })
+                     .populate({
+                        path: 'publisher',
+                        select: 'name'
+                    });
+};
 
 

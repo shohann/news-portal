@@ -1,8 +1,9 @@
-const { createCategory, fetchCategoryNews, fetchAllCategory } = require('../services/categoryService');
+const { createCategory, fetchCategoryNews, fetchAllCategory, fetchCategoriesWithCount } = require('../services/categoryService');
 
 module.exports.getCategoryPage = async (req, res) => {
     try {
-        res.status(200).render('categories')
+        const categories = await fetchCategoriesWithCount()
+        res.status(200).render('categories', { categories: categories })
     } catch (error) {
         console.log(error);
         res.send(error)

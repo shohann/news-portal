@@ -11,7 +11,10 @@ module.exports.fetchCategory = async (categoryName, session) => {
                          .select({ news: 0, __v: 0 }).orFail()
 }
 
-// Admin pannel
+module.exports.fetchCategoriesWithCount = async () => {
+    return await Category.find().select({ news: 0, __v: 0, _id: 0 }) //admin category view
+}
+
 module.exports.fetchAllCategory = async () => {
     return await Category.find()
                          .select({ news: 0, __v: 0 });

@@ -1,0 +1,85 @@
+<%- include('partials/admin-dashboard-sidebar'); -%>
+
+<div class="main">
+
+    <table>
+      <thead>
+        <tr>
+          <th>Details</th>
+          <th>Publisher</th>
+          <th>Category</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+
+        <% if (news.length > 0) { %>
+            <% for(let i = 0; i < news.length; i++ ){ %>
+              <tr>
+                 <!-- newsId lagbe to access -> /api/news/<%= news[i]._id %> -->
+                <td><a href="#">View</a></td>
+                <td><%= news[i].publisher.name %> </td>
+                <td><%= news[i].category.categoryName %></td>
+                <td>
+                    <div>
+                        <Button  class="approve-news" value="<%= news[i]._id %>" >Approve</Button>
+                        <Button class="delete-news" value="<%= news[i]._id %>">Delete</Button>
+                    </div>
+                </td>
+              </tr>
+            <% } %>
+          <% } else { %>
+              <!-- <p>No results</p> -->
+          <% } %>
+
+      </tbody>
+    </table>
+  </div>
+
+
+  <script>
+    const approveButtons = document.querySelectorAll('.approve-news');
+    const deleteButtons = document.querySelectorAll('.delete-news');
+
+    approveButtons.forEach(function (approveButton) {
+      approveButton.addEventListener("click", async function(e) {
+        e.preventDefault();
+
+        try {
+          const newsId = e.target.value;
+          const res = await fetch(`/api/news/${newsId}`, { 
+            method: 'PUT'
+          });
+          const data = await res.json();
+          console.log(data);
+
+          if (data) {
+            location.assign('/api/news/all/u');
+          }
+          
+        } catch (error) {
+          console.log(error);
+        }
+
+
+      });
+    });
+
+    deleteButtons.forEach(function (deleteButton) {
+      deleteButton.addEventListener("click", function(e) {
+        e.preventDefault();
+        console.log(e.target.value);
+
+        try {
+          const newsId = e.target.value;
+          
+        } catch (error) {
+          console.log(error);
+        }
+
+      });
+    });
+
+
+
+  </script>
