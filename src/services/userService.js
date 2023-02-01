@@ -53,3 +53,16 @@ module.exports.updateUsersCommentsById = async (commentId, userId, session) => {
         }
     }, { session: session });
 };
+
+
+// Transaction
+module.exports.deleteUsersNewsById = async (publisherId, newsId) => {
+    return await User.updateOne({
+        _id: publisherId
+    }, {
+        $pull: {
+            news: newsId
+        }
+    })
+};
+

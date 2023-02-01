@@ -51,3 +51,16 @@ module.exports.updateCategoriesNewsById = async (categoryId, newsId, session) =>
 // module.exports.upd = async (categoryName, newsId, session) => {
 //     return await Category.findOneAndUpdate({ categoryName: categoryName})
 // }
+
+
+// Transaction
+module.exports.deleteCategoriesNewsById = async (categoryId, newsId) => {
+    return await Category.updateOne({
+        _id: categoryId
+    }, {
+        $pull: {
+            news: newsId
+        }
+    });
+};
+

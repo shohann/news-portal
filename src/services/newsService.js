@@ -81,9 +81,7 @@ module.exports.updateNewsApprovalById = async (newsId, adminId) => {
     });
 };
 
-module.exports.deleteNewsById = async (newsId) => {
-    return await News.deleteOne({ _id: newsId })
-}
+
 
 module.exports.fetchUnapprovedNews = async () => {
     return await News.find({ "approval.status": false })
@@ -111,4 +109,11 @@ module.exports.fetchApprovedNews = async () => {
                     });
 };
 
+module.exports.fetchLatestNews = async () => {
+    return await News.find().sort({ publishTime: -1 }).limit(5)
+}
 
+// Transaction
+module.exports.deleteNewsById = async (newsId) => {
+    return await News.findByIdAndDelete(newsId)
+}

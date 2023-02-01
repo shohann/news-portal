@@ -2,8 +2,8 @@ const { createNews, fetchNewsById,
         updateNewsApprovalById, fetchAllNews, 
         fetchPartialResult, fetchUnapprovedNews, 
         fetchApprovedNews, deleteNewsById } = require('../services/newsService');
-const { updateUsersNewsById } = require('../services/userService');
-const { updateCategoriesNewsById } = require('../services/categoryService');
+const { updateUsersNewsById, deleteUsersNewsById } = require('../services/userService');
+const { updateCategoriesNewsById, deleteCategoriesNewsById } = require('../services/categoryService');
 const { fetchAllCategory, fetchCategory } = require('../services/categoryService');
 const { runInTransaction } = require('../services/databaseTransaction');
 
@@ -46,7 +46,8 @@ module.exports.getNews = async (req, res) => {
     
     try {
         const news = await fetchNewsById(newsId)
-        res.send(news);
+        console.log(news);
+        res.status(200).render('news-details', { news: news });
     } catch (error) {
         console.log(error);
         res.send(error);
@@ -82,7 +83,7 @@ module.exports.modifyNewsApproval = async (req, res) => {
 
     try {
         await updateNewsApprovalById(newsId, adminId)
-        res.send(result)
+        res.status(200).json({ msg: "success" })
     } catch (error) {
         console.log(error);
         res.send(error);
@@ -93,7 +94,9 @@ module.exports.removeNews = async (req, res) => {
     const newsId = req.params.newsId;
     try {
 
-        await deleteNewsById(newsId);
+        const { publisher, category } = await deleteNewsById(newsId);
+        await deleteCategoriesNewsById(category, newsId);
+        await deleteUsersNewsById(publisher, newsId);
         
         res.status(200).json({
             msg: 'deleted'
@@ -106,7 +109,7 @@ module.exports.removeNews = async (req, res) => {
 module.exports.getUnapprovedNewsPage = async (req, res) => {
     try {
         const unapprovedNews = await fetchUnapprovedNews();
-        console.log(unapprovedNews);
+        // console.log(unapprovedNews);
         res.status(200).render('unapproved-news', { news: unapprovedNews });
     } catch (error) {
         console.log(error);

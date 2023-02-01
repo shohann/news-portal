@@ -11,6 +11,8 @@ const newsRoute = require('./src/routes/newsRoute');
 const commentRoute = require('./src/routes/commentRoute');
 const categoryRoute = require('./src/routes/categoryRoute');
 
+const { cacheDBInit } = require('./src/cache/cacheDBInit');
+
 app.use(express.static('public'))
 app.use(express.json()); 
 app.use(express.urlencoded({ extended: true }));
@@ -46,6 +48,8 @@ app.use((err, req, res, next) => {
 app.listen(port, async () => {
     try {
         await DBInit(DBUrl);
+        await cacheDBInit();
+        console.log('redis connected..app level..');
         console.log('Database connected...');
         console.log(`listening on port ${port}`);
     } catch (error) {

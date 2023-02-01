@@ -37,7 +37,7 @@
   </div>
 
 
-  <script>
+<script>
     const approveButtons = document.querySelectorAll('.approve-news');
     const deleteButtons = document.querySelectorAll('.delete-news');
 
@@ -65,21 +65,31 @@
       });
     });
 
+
     deleteButtons.forEach(function (deleteButton) {
-      deleteButton.addEventListener("click", function(e) {
+      deleteButton.addEventListener("click", async function(e) {
         e.preventDefault();
         console.log(e.target.value);
 
         try {
           const newsId = e.target.value;
+          const res = await fetch(`/api/news/${newsId}`, { 
+            method: 'DELETE'
+          });
+          const data = await res.json();
+          console.log(data);
+
+          if (data) {
+            location.assign('/api/news/all/a');
+          }
           
         } catch (error) {
           console.log(error);
         }
 
       });
-    });
+   });
 
 
 
-  </script>
+</script>
