@@ -1,17 +1,17 @@
 <%- include('partials/header'); -%>
 
-<!-- need loop -->
 <div class="topnav">
     <a  href="/">Home</a>
     <% for(let i = 0; i < categories.length; i++ ){ %>
         <% if (current === categories[i].categoryName) { %>
-            <a style="background-color: #04AA6D;" href="/api/categories/all?name=<%= categories[i].categoryName %>"><%= categories[i].categoryName %></a>
+            <!-- <a style="background-color: #04AA6D;" href="/api/categories/all?name=<%= categories[i].categoryName %>"><%= categories[i].categoryName %></a> -->
+            <a style="background-color: #04AA6D;" href="/api/categories/all?name=<%= categories[i].categoryName %> &page=1&size=2"><%= categories[i].categoryName %></a>
         <% } else { %>
-            <a  href="/api/categories/all?name=<%= categories[i].categoryName %>"><%= categories[i].categoryName %></a>
+            <!-- <a  href="/api/categories/all?name=<%= categories[i].categoryName %>"><%= categories[i].categoryName %></a> -->
+            <a  href="/api/categories/all?name=<%= categories[i].categoryName %>&page=1&size=2"><%= categories[i].categoryName %></a>
         <% } %>
     <% } %>
 </div>
-
 
 
 <div style="padding: 30px; border: 5px solid black;">
@@ -27,6 +27,65 @@
     <% } %>
 </div>
 
+<% if (pageCount > 0) { %>
+    <div id="pagination">
+        <button id="previous">Previous</button>
+        <!-- <a href=""></a> -->
+        <select name="pages" id="page">
+            <% for(let i = 1; i <= pageCount; i++ ){ %>
+            <option value="<%= i %> "> <%= i %> </option>
+            <% } %>
+        </select>
+        <button id="next">Next</button>
+    </div>
+<% } %>
+
+
+
 <script>
-    const categoryName = location.href.split('=')[1];
+    const pageSelection = document.getElementById('page');
+    const nextButton = document.getElementById('next');
+    const previousButton = document.getElementById('previous');
+      
+    const totalPage = parseInt(pageSelection.length);
+    const size = parseInt(location.href.split('?')[1].split('&')[2].split('=')[1]);
+    const docsCount = Math.ceil((totalPage * size) / size);
+
+    let nextPageNum;
+    let previousPageNum;
+    let lastPageNum;
+    const categoryName = location.href.split('?')[1].split('&')[0].split('=')[1];
+
+    window.addEventListener('load', function (e) {
+        e.preventDefault()
+        const currentPageNum = parseInt(location.href.split('&')[1].split('=')[1])
+        nextPageNum = currentPageNum + 1;
+        previousPageNum = currentPageNum - 1;
+        pageSelection.selectedIndex = currentPageNum - 1
+
+        if (previousPageNum === 0) {
+            previousButton.disabled = true
+        }
+
+        if (currentPageNum === totalPage) {
+            nextButton.disabled = true
+        }
+    });
+
+    pageSelection.addEventListener('change', function (e) {
+        e.preventDefault();
+        const pageNum = parseInt(e.target.value)
+        location.assign(`/api/categories/all?name=${categoryName}&page=${pageNum}&size=${size}`);
+    });
+
+    previous.addEventListener('click', function (e) {
+        e.preventDefault();
+        location.assign(`/api/categories/all?name=${categoryName}&page=${previousPageNum}&size=${size}`);
+    });
+
+    next.addEventListener('click', function (e) {
+        e.preventDefault();
+        location.assign(`/api/categories/all?name=${categoryName}&page=${nextPageNum}&size=${size}`);
+    });
 </script>
+

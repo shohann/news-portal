@@ -1,12 +1,63 @@
 <%- include('partials/header'); -%>
 
-<p>News Details</p>
 
-<button>Back</button>
+<div class="news-single">
+    <button>Back</button>
+    <h1><%= news.header %></h1>
 
-<h1><%= news.header %></h1>
+    <p><%= news.newsText %></p>
 
-<p><%= news.newsText %></p>
+    <br>
+    <br>
+    <div >
 
-<h2>Comments</h2>
-<!-- Post a comment -->
+        <form id="comment-section">
+            <label  for="comment">Add A comment</label>
+            <br>
+            <input id="comment-box" type="text" name="comment" required />
+            <br>
+            <br>
+            <button>Comment</button>
+        </form>
+
+        <% if (news.comments.length > 0) { %>
+            <% for( let i = 0; i < news.comments.length; i++)  { %>
+                <div class="comment-txt">
+                    <h3> <%= news.comments[i].user.name %> </h3>
+                    <p> <%= news.comments[i].commentText %> </p>
+                </div>
+            <% } %>
+        <% } else { %>
+            <p>No comments</p>
+        <% } %>
+
+    </div>
+</div>
+
+
+<script>
+    const commentSection = document.getElementById('comment-section');
+    const newsId = location.pathname.split('/')[3];
+
+    commentSection.addEventListener('submit', async function (e) {
+        e.preventDefault();
+        const commentText = e.target[0].value;
+
+        try {
+            const res = await fetch(`/api/comments/${newsId}`, {
+                method: 'POST',
+                body: JSON.stringify({ commentText: commentText }),
+                headers: {'Content-Type': 'application/json'}
+            });
+            const data = await res.json();
+
+            console.log(data);
+            if (data) {
+                location.assign(`/api/news/${newsId}`);
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    });
+
+</script>

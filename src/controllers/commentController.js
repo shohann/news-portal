@@ -8,6 +8,7 @@ module.exports.setComment = async (req, res) => {
     const userId = req.user.id;
 
     try {
+
         const newComment = await createComment({
             commentText: commentText,
             news: newsId,
@@ -17,9 +18,10 @@ module.exports.setComment = async (req, res) => {
         await updateNewsCommentsById(newComment._id, newsId);
         await updateUsersCommentsById(newComment._id, userId);
 
-        res.send(newComment);
+        res.status(200).json({ msg: newComment});
     } catch (error) {
         console.log(error)
         res.send(error)
     }
-}
+};
+

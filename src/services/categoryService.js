@@ -5,6 +5,12 @@ module.exports.createCategory = async (category) => {
     return await newCategory.save();
 };
 
+// without transaction -> duplocacy -> for pagination
+module.exports.fetchCategoryByName = async (categoryName) => {
+    return await Category.findOne({ categoryName: categoryName })
+                         .select({ news: 0, __v: 0 }).orFail();
+};
+
 // Transaction
 module.exports.fetchCategory = async (categoryName, session) => {
     return await Category.findOne({ categoryName: categoryName }, null ,{ session: session })
@@ -18,13 +24,21 @@ module.exports.fetchCategoriesWithCount = async () => {
 module.exports.fetchAllCategory = async () => {
     return await Category.find()
                          .select({ news: 0, __v: 0 });
-}
+};
 
-module.exports.fetchCategoryNews = async (categoryName) => {
+
+module.exports.fetchCategoryNews = async (categoryName, limit, skip) => {
+    // accepts limit and skip
     return await Category.findOne({ categoryName: categoryName })
-                     .select({ __v: 0 })
-                     .populate('news')
-}
+                         .select({ __v: 0 })
+                         .populate({
+                            path: 'news',
+                            match: { "approval.status": true },
+                            options: { limit: limit, skip: skip }
+                        })
+};
+
+
 
 
 
@@ -63,4 +77,6 @@ module.exports.deleteCategoriesNewsById = async (categoryId, newsId) => {
         }
     });
 };
+
+
 

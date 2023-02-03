@@ -45,7 +45,7 @@ module.exports.getNews = async (req, res) => {
     const newsId = req.params.newsId;
     
     try {
-        const news = await fetchNewsById(newsId)
+        const news = await fetchNewsById(newsId);
         console.log(news);
         res.status(200).render('news-details', { news: news });
     } catch (error) {

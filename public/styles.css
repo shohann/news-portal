@@ -311,3 +311,30 @@ only screen and (max-width: 760px),
   font-size: 1em;
   width: 40%;
 }
+
+/* News Single */
+
+.news-single {
+  background-color: #fff;
+  max-width: 95%;
+  margin: 20 auto;
+  padding: 2rem;
+}
+
+#comment-box {
+  height: 100px;
+  width: 600px;
+}
+
+.comment-txt {
+  background-color: #acdeff;
+  border-radius: 10px;
+  height: 10%;
+  width: 70%;
+  padding: 10px;
+  margin-top: 20px;
+}
+
+#pagination {
+  margin: 0 800 auto;
+}

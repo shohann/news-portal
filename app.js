@@ -49,9 +49,9 @@ app.listen(port, async () => {
     try {
         await DBInit(DBUrl);
         await cacheDBInit();
-        console.log('redis connected..app level..');
-        console.log('Database connected...');
-        console.log(`listening on port ${port}`);
+        console.log('Redis connected..');
+        console.log('MongoDB connected...');
+        console.log(`Server listening on port ${port}`);
     } catch (error) {
 
         console.log(error);

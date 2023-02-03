@@ -3,7 +3,9 @@
 <div class="topnav">
     <a style="background-color: #04AA6D;" href="/">Home</a>
     <% for(let i = 0; i < categories.length; i++ ){ %>
-            <a  href="/api/categories/all?name=<%= categories[i].categoryName %>"><%= categories[i].categoryName %></a>
+            <!-- <a  href="/api/categories/all?name=<%= categories[i].categoryName %>"><%= categories[i].categoryName %></a> -->
+
+            <a  href="/api/categories/all?name=<%= categories[i].categoryName%>&page=1&size=2"><%= categories[i].categoryName %></a>
     <% } %>
 </div>
 
@@ -13,8 +15,6 @@
     <div style="padding: 30px; border: 5px solid black; width: 70%;">
         <h1>Latest News</h1>
 
-    
-    
         <% for(let i = 0; i < news.length; i++ ){ %>
             <p><%= news[i].header %></p>
             <p><%= news[i].category %></p>

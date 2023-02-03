@@ -40,4 +40,9 @@ module.exports.admin = (req, res, next) => {
 module.exports.publisher = (req, res, next) => {
     if (req.user.role !== 'publisher') return res.status(403).send('Forbidden');
     next();
+};
+
+module.exports.user = (req, res, next) => {
+    if (req.user.role !== 'user') return res.status(403).send('Forbidden');
+    next();
 }

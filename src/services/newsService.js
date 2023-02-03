@@ -18,7 +18,16 @@ module.exports.createNews =  async (news, session) => {
 
 module.exports.fetchNewsById = async (newsId) => {
     return await News.findOne({ _id: newsId })
+                     .populate({
+                        path:'comments',
+                        populate: {
+                            path: 'user',
+                            select: 'name'
+                        }
+                     });
 };
+
+
 
 module.exports.fetchAllNews = async () => {
     return News.find();
@@ -116,4 +125,8 @@ module.exports.fetchLatestNews = async () => {
 // Transaction
 module.exports.deleteNewsById = async (newsId) => {
     return await News.findByIdAndDelete(newsId)
+}
+
+module.exports.fetchNewsCountByCategory = async (categoryId) => {
+    return News.countDocuments({ category: categoryId, 'approval.status': true });
 }
