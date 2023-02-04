@@ -22,39 +22,26 @@ module.exports.setNewsPage = async (req, res) => {
 };
 
 module.exports.setNews = async (req, res) => {
-    // const { header, newsText, categoryName } = req.body;
-    const userId = req.user.id;
     try { 
         await uploadPhoto(req, res);
-
-        console.log(req.body)
-
-        if (req.file === undefined) {
-            return res.status(400).send({ message: "Please upload a file!" });
-        }
-
-        // const originalName = req.file.originalname;
+        const userId = req.user.id;
         const localFilePath = req.file.path;
-
-        // console.log(originalName)
-        // console.log(localFilePath)
-
+        if (req.file === undefined) return res.status(400).send({ message: "Please upload a file!" });
         const cloudFileInfo = await cloudinary.uploader.upload(localFilePath);
         const image = cloudFileInfo.secure_url;
         await unlink(localFilePath);
-
-
-        // await runInTransaction(async (session) => {
-        //     const category = await fetchCategory(categoryName, session) 
-        //     const news = await createNews({
-        //         header: header,
-        //         newsText: newsText,
-        //         category: category._id,
-        //         publisher: userId
-        //     }, session);
-        //     await updateUsersNewsById(news._id, userId, session);
-        //     await updateCategoriesNewsById(news.category, news._id, session);
-        // });
+        await runInTransaction(async (session) => {
+            const category = await fetchCategory(req.body.category, session) 
+            const news = await createNews({
+                header: req.body.title,
+                newsText: req.body.article,
+                image: image,
+                category: category._id,
+                publisher: userId
+            }, session);
+            await updateUsersNewsById(news._id, userId, session);
+            await updateCategoriesNewsById(news.category, news._id, session);
+        });
         res.status(201).json({ msg: 'News Successfully created' });
     } catch (error) {
         // tr a errr hole seta ekhane asbe re throw hoa

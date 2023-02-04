@@ -5,7 +5,8 @@ module.exports.Comment = model(
     Schema({
         commentText: {
             type: String,
-            requred: true,
+            required: true
+            
         },
         publishTime: { 
             type: Date, 

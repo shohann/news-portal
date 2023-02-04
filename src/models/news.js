@@ -6,11 +6,16 @@ module.exports.News = model(
     Schema({
         header: {
             type: String,
-            requred: true,
+            required: true
         },
         newsText: {
             type: String,
-            requred: true,
+            required: true
+
+        },
+        image: {
+            type: String,
+            required: true
         },
         publishTime: { 
             type: Date, 

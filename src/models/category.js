@@ -5,7 +5,7 @@ module.exports.Category = model(
     Schema({
         categoryName: {
             type: String,
-            requred: true,
+            required: true
         },
         news: [
             {

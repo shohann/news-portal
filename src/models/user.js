@@ -3,12 +3,19 @@ const { Schema, model } = require('mongoose');
 module.exports.User = model(
     'User', 
     Schema({
-        name: String,
+        name: {
+            type: String,
+            required: true
+        },
         email: {
             type: String,
+            required: true,
             unique: true
         },
-        password: String,
+        password: {
+            type: String,
+            required: true
+        },
         role: {
             type: String,
             enum: ['user', 'admin', 'publisher'],
