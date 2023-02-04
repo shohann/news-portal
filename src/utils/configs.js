@@ -12,3 +12,11 @@ module.exports.getRedisHost = () => config.get('redisHost');
 
 module.exports.getRedisPort = () => config.get('redisPort');
 
+module.exports.getCloudinaryName = () => config.get('cloudinaryName');
+
+module.exports.getCloudinaryAPIKey = () => config.get('cloudinaryAPIKey');
+
+module.exports.getCloudinaryAPISecret = () => config.get('cloudinaryAPISecret');
+
+
+

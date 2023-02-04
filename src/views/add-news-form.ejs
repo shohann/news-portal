@@ -2,14 +2,11 @@
 
 <%- include('partials/publisher-dashboard-sidebar'); -%>
 
-
-
 <div>
     <h1 style="text-align: center;padding: 40px; border-bottom: 2px solid black; color: black;">ADD NEWS</h1>
 </div>
 
 <form id="add-news" class="news-form">
-
     <p><%= categories[0].categoryName %></p>
     <label class="news-label" for="title">Title</label>
     <input class="news-input" type="text" name="title"  />
@@ -19,22 +16,23 @@
         <% for(let i = 0; i < categories.length; i++ ){ %>
             <option value="<%= categories[i].categoryName %>"><%= categories[i].categoryName %></option>
         <% } %>
-
-        <!-- <option value="ACHIEVEMENT">Achievement Test</option>
-        <option value="PERSONALITY">Personality Test</option>
-        <option value="PSYCHOLOGICAL">Psychological Test</option>
-        <option value="IQ">IQ Test</option> -->
     </select>
+
 
     <label class="news-label" for="article">News Article</label>
     <input class="article-input" type="text" name="article"  />
+
+    <!-- File -->
+    <label class="news-label" for="file">Photo</label>
+    <input  type="file" id="file" name="file"  />
+    <!--  -->
 
     <br>
     <br>
     <button class="submit-btn">Submit</button>
 </form>
 
-<!-- File & Drop Down Category -->
+
 
 <script>
     const newsForm = document.getElementById('add-news');
@@ -44,14 +42,19 @@
 
         const header = e.target[0].value;
         const categoryName = e.target[1].value;
-        const newsText = e.target[2].value
+        const newsText = e.target[2].value;
+        const file = e.target[3].files[0];
+        const formData = new FormData();
 
+        formData.append("title", header);
+        formData.append("category", categoryName);
+        formData.append("article", newsText);
+        formData.append("file", file);
 
         try {
             const res = await fetch('/api/news', { 
                 method: 'POST', 
-                body: JSON.stringify({ header, newsText, categoryName }),
-                headers: {'Content-Type': 'application/json'}
+                body: formData
             });
 
             const data = await res.json();
@@ -59,6 +62,19 @@
             if (data) {
                 location.assign('/')
             }
+            ////////////////////////////////////////
+
+            // const res = await fetch('/api/news', { 
+            //     method: 'POST', 
+            //     body: JSON.stringify({ header, newsText, categoryName }),
+            //     headers: {'Content-Type': 'application/json'}
+            // });
+
+            // const data = await res.json();
+            // console.log(data);
+            // if (data) {
+            //     location.assign('/')
+            // }
         } catch (error) {
             console.log(error);
         }

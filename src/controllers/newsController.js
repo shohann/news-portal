@@ -7,6 +7,10 @@ const { updateCategoriesNewsById, deleteCategoriesNewsById } = require('../servi
 const { fetchAllCategory, fetchCategory } = require('../services/categoryService');
 const { runInTransaction } = require('../services/databaseTransaction');
 
+const cloudinary = require('../utils/cloudinary');
+const uploadPhoto = require('../middlewares/upload');
+const { unlink } = require('fs').promises;
+
 module.exports.setNewsPage = async (req, res) => {
     try {
         const categories = await fetchAllCategory();
@@ -18,21 +22,39 @@ module.exports.setNewsPage = async (req, res) => {
 };
 
 module.exports.setNews = async (req, res) => {
-    const { header, newsText, categoryName } = req.body;
+    // const { header, newsText, categoryName } = req.body;
     const userId = req.user.id;
-
     try { 
-        await runInTransaction(async (session) => {
-            const category = await fetchCategory(categoryName, session) 
-            const news = await createNews({
-                header: header,
-                newsText: newsText,
-                category: category._id,
-                publisher: userId
-            }, session);
-            await updateUsersNewsById(news._id, userId, session);
-            await updateCategoriesNewsById(news.category, news._id, session);
-        });
+        await uploadPhoto(req, res);
+
+        console.log(req.body)
+
+        if (req.file === undefined) {
+            return res.status(400).send({ message: "Please upload a file!" });
+        }
+
+        // const originalName = req.file.originalname;
+        const localFilePath = req.file.path;
+
+        // console.log(originalName)
+        // console.log(localFilePath)
+
+        const cloudFileInfo = await cloudinary.uploader.upload(localFilePath);
+        const image = cloudFileInfo.secure_url;
+        await unlink(localFilePath);
+
+
+        // await runInTransaction(async (session) => {
+        //     const category = await fetchCategory(categoryName, session) 
+        //     const news = await createNews({
+        //         header: header,
+        //         newsText: newsText,
+        //         category: category._id,
+        //         publisher: userId
+        //     }, session);
+        //     await updateUsersNewsById(news._id, userId, session);
+        //     await updateCategoriesNewsById(news.category, news._id, session);
+        // });
         res.status(201).json({ msg: 'News Successfully created' });
     } catch (error) {
         // tr a errr hole seta ekhane asbe re throw hoa

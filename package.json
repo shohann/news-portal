@@ -18,6 +18,7 @@
   "homepage": "https://github.com/shohann/news-portal#readme",
   "dependencies": {
     "bcrypt": "^5.1.0",
+    "cloudinary": "^1.33.0",
     "config": "^3.3.8",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",

@@ -10,7 +10,6 @@ const userRoute = require('./src/routes/userRoute');
 const newsRoute = require('./src/routes/newsRoute');
 const commentRoute = require('./src/routes/commentRoute');
 const categoryRoute = require('./src/routes/categoryRoute');
-
 const { cacheDBInit } = require('./src/cache/cacheDBInit');
 
 app.use(express.static('public'))

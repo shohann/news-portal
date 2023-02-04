@@ -2,6 +2,7 @@ const router = require('express').Router();
 const { setNews, getNews, modifyNewsApproval, setNewsPage, searchNews, getUnapprovedNewsPage, getApprovedNewsPage, removeNews } = require('../controllers/newsController');
 const { authorize, admin, publisher } = require('../middlewares/authorize');
 
+
 router.route('/search')
     .get(searchNews);
 
