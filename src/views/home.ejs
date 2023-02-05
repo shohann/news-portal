@@ -9,25 +9,26 @@
     <% } %>
 </div>
 
-
-<div style="display: flex; height: 80%;">
-
-    <div style="padding: 30px; border: 5px solid black; width: 70%;">
-        <h1>Latest News</h1>
-
+<!-- <h1>Latest News</h1> -->
+<div style="margin: 25px;">
+    <h1>Latest News</h1>
+    <div class="news-container" >
+ 
         <% for(let i = 0; i < news.length; i++ ){ %>
-            <p><%= news[i].header %></p>
-            <p><%= news[i].category %></p>
-            <br>
-            <br>
+            <div class="news-card">
+                <img src="<%= news[i].image %>">
+                <h4><a href="/api/news/<%= news[i]._id %>"><%= news[i].header %><%= news[i].header %></a></h4>
+   
+                <br>
+                <br>
+            </div>
         <% } %>
     
     </div>
     
-    <div  style="padding: 30px; border: 5px solid black; width: 30%;">
+    <!-- <div  style="padding: 30px; border: 5px solid black; width: 30%;">
         <h1>Most Viewd</h1>
-    </div>
-
+    </div> -->
 </div>
 
 

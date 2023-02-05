@@ -55,7 +55,7 @@ module.exports.getNews = async (req, res) => {
     
     try {
         const news = await fetchNewsById(newsId);
-        console.log(news);
+        // console.log(news);
         res.status(200).render('news-details', { news: news });
     } catch (error) {
         console.log(error);
@@ -75,11 +75,10 @@ module.exports.getAllNewsPage = async (req, res) => {
 }
 
 module.exports.searchNews = async (req, res) => {
-    const arg = req.query.arg;
-    
     try {
-        const result = await fetchPartialResult(arg)
-        res.status(200).send(result);
+        const arg = req.query.arg;
+        const result = await fetchPartialResult(arg);
+        res.status(200).render('search-result', { result: result, arg: arg });
     } catch (error) {
         console.log(error);
         res.send(error)

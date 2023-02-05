@@ -119,7 +119,7 @@ module.exports.fetchApprovedNews = async () => {
 };
 
 module.exports.fetchLatestNews = async () => {
-    return await News.find().sort({ publishTime: -1 }).limit(5)
+    return await News.find().sort({ publishTime: -1 }).limit(10)
 }
 
 // Transaction

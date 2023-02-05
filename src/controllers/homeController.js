@@ -23,6 +23,8 @@ module.exports.getHomePage = async (req, res) => {
 
         await setLatestNewsCache(news);
         await setCategoriesCache(categories);
+
+        // console.log(news)
         
         res.status(200).render('home', { news: news, categories: categories });
     } catch (error) {

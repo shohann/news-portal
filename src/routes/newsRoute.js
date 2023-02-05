@@ -4,7 +4,7 @@ const { authorize, admin, publisher } = require('../middlewares/authorize');
 
 
 router.route('/search')
-    .get(searchNews);
+    .get(authorize, searchNews);
 
 router.route('/')
     .post(authorize, publisher, setNews) 

@@ -12,7 +12,7 @@
         <div class="header-right">
           
           <form>
-              <input class="search-box" type="text" name="search" placeholder="Search..">
+              <input id="search" class="search-box" type="text" name="search" placeholder="Search..">
           </form>
 
           <% if (user === null) { %>
@@ -30,14 +30,20 @@
             <a href="/api/users/logout">Log Out</a>
           <% } %>
 
-
-
-
-  
-
         </div>
       </nav>
 
 
+<script>
+  const search = document.getElementById('search');
 
+  search.addEventListener('keypress', async function (e) {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      const arg = e.target.value;
+      location.assign(`/api/news/search?arg=${arg}`);
+    }
+  });
+
+</script>
     

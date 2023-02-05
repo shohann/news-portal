@@ -1,0 +1,20 @@
+<%- include('partials/header'); -%>
+
+<h3 style="text-align: center;">Search Results for "<%= arg %>"</h3>
+
+<div style="margin: 25px;" >
+        <div class="news-container">
+            <% if (result && result.length > 0) { %>
+                <% for(let i = 0; i < result.length; i++ ){ %>
+                    <div class="news-card">
+                        <img src="<%= result[i].image %>">
+                        <h4><a href="/api/news/<%= result[i]._id %>"><%= result[i].header %><%= result[i].header %></a></h4>
+                        <br>
+                    </div>
+
+                <% } %>
+            <% } else { %>
+                <p>No News</p>
+            <% } %>
+        </div>
+</div>
