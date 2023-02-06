@@ -1,8 +1,7 @@
 const router = require('express').Router();
 const { validateUser } = require('../middlewares/validate');
-const { authorize, publisher } = require('../middlewares/authorize')
+const { authorize, publisher } = require('../middlewares/authorize');
 const { signUp, logIn, logout, signUpPage, logInPage, getAdminDashboardPage, getPublisherDashboardPage, getPublisherNewsPage } = require('../controllers/userController');
-
 
 router.route('/signup')
     .get(authorize,signUpPage)
@@ -26,7 +25,5 @@ router.route('/publisher/dashboard')
 
 router.route('/mynews')
       .get(authorize, publisher, getPublisherNewsPage);
-
-
 
 module.exports = router;

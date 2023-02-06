@@ -47,12 +47,16 @@ module.exports.getCategoryNewsPage = async (req, res) => {
 };
 
 module.exports.setCategory = async (req, res) => {
-    const categoryName = req.body.categoryName;
     try {
+        const { categoryName }= req.body;
         const newCategory = await createCategory({
             categoryName: categoryName
-        })
-        res.send(newCategory);
+        });
+
+        res.status(201).json({ 
+            success: true, 
+            message: `${newCategory.categoryName} category created`
+        });
     } catch (error) {
         console.log(error);
         res.send(error)

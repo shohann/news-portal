@@ -68,6 +68,7 @@
 	}
 	if (submitCategory) {
 		submitCategory.addEventListener('click', async (e) => {
+			e.preventDefault();
 			const categoryName = categoryInput.value;
       console.log(categoryName);
 			try {
@@ -78,11 +79,12 @@
 				});
 				const data = await res.json();
 				if (data) {
-					location.assign('/api/users/admin/dashboard');
+					console.log(data);
+					// location.assign('/api/users/admin/dashboard');
 				}
-				}
-				catch (err) {
-				console.log(err);
+			}
+			catch (err) {
+				console.log(err.message);
 			}
 		});
 	}
