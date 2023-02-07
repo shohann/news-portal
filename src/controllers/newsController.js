@@ -7,9 +7,6 @@ const { updateCategoriesNewsById, deleteCategoriesNewsById } = require('../servi
 const { fetchAllCategory, fetchCategory } = require('../services/categoryService');
 const { runInTransaction } = require('../services/databaseTransaction');
 
-const cloudinary = require('../utils/cloudinary');
-const uploadPhoto = require('../middlewares/upload');
-const { unlink } = require('fs').promises;
 
 module.exports.setNewsPage = async (req, res) => {
     try {
@@ -39,7 +36,7 @@ module.exports.setNews = async (req, res) => {
             await updateUsersNewsById(news._id, userId, session);
             await updateCategoriesNewsById(news.category, news._id, session);
         });
-        
+
         res.status(201).json({ msg: 'News Successfully created' });
     } catch (error) {
         // tr a errr hole seta ekhane asbe re throw hoa
