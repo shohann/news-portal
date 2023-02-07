@@ -79,7 +79,6 @@ module.exports.logout = (req, res) => {
 
 module.exports.getAdminDashboardPage = async (req, res) => {
     try {
-        // res.status(200).render('admin-dashboard');
         res.status(200).redirect('/api/categories');
     } catch (error) {
         console.log(error);
@@ -89,7 +88,6 @@ module.exports.getAdminDashboardPage = async (req, res) => {
 
 module.exports.getPublisherDashboardPage = async (req, res) => {
     try {
-        // res.status(200).render('publisher-dashboard');
         res.status(200).redirect('/api/news');
     } catch (error) {
         console.log(error);
@@ -98,8 +96,8 @@ module.exports.getPublisherDashboardPage = async (req, res) => {
 };
 
 module.exports.getPublisherNewsPage = async (req, res) => {
-    const userId = req.user.id;
     try {
+        const userId = req.user.id;
         const { news } = await fetchUsersNewsById(userId);
         res.status(200).render('my-news', { news: news});
     } catch (error) {

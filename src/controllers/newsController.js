@@ -31,7 +31,7 @@ module.exports.setNews = async (req, res) => {
         const cloudFileInfo = await cloudinary.uploader.upload(localFilePath);
         const image = cloudFileInfo.secure_url;
         await unlink(localFilePath);
-        //
+        
         await runInTransaction(async (session) => {
             const category = await fetchCategory(req.body.category, session) 
             const news = await createNews({
@@ -53,9 +53,8 @@ module.exports.setNews = async (req, res) => {
 };
 
 module.exports.getNews = async (req, res) => {
-    const newsId = req.params.newsId;
-    
     try {
+        const newsId = req.params.newsId;
         const news = await fetchNewsById(newsId);
         res.status(200).render('news-details', { news: news });
     } catch (error) {
@@ -87,10 +86,9 @@ module.exports.searchNews = async (req, res) => {
 };
 
 module.exports.modifyNewsApproval = async (req, res) => {
-    const newsId = req.params.newsId;
-    const adminId = req.user.id;
-
     try {
+        const newsId = req.params.newsId;
+        const adminId = req.user.id;
         await updateNewsApprovalById(newsId, adminId)
         res.status(200).json({ msg: "success" })
     } catch (error) {
@@ -102,7 +100,6 @@ module.exports.modifyNewsApproval = async (req, res) => {
 module.exports.removeNews = async (req, res) => {
     try {
         const newsId = req.params.newsId;
-
         await runInTransaction(async (session) => {
             const { publisher, category } = await deleteNewsById(newsId, session);
             await deleteCategoriesNewsById(category, newsId, session);
@@ -125,7 +122,7 @@ module.exports.getUnapprovedNewsPage = async (req, res) => {
         console.log(error);
         res.send(error)
     }
-}
+};
 
 module.exports.getApprovedNewsPage = async (req, res) => {
     try {
@@ -135,5 +132,5 @@ module.exports.getApprovedNewsPage = async (req, res) => {
         console.log(error);
         res.send(error)
     }
-}
+};
 
