@@ -1,6 +1,9 @@
 const { userValidation } = require('../validations/userValidation');
 const { categoryValidation } = require('../validations/categoryValidation');
 const { commentValidation } = require('../validations/commentValidation');
+const { newsValidation } = require('../validations/newsValidation');
+
+const { unlink } = require('fs').promises;
 
 module.exports.validateUser = (req, res, next) => {
     const { name, email, password } = req.body
@@ -54,3 +57,30 @@ module.exports.validateComment = (req, res, next) => {
         next();
     }
 };
+
+module.exports.validateNews =  async (req, res, next) => {
+        const { header, categoryName, newsText } = req.body;
+        const localPath = req.file.path
+        const { error } = newsValidation({
+            header: header,
+            categoryName: categoryName,
+            newsText: newsText,
+        });
+
+        if (error) {
+            await unlink(localPath);
+            const message = error.message
+            return res.status(400).json({
+                success: false,
+                message: message
+            });
+        } else {
+            next();
+        }
+};
+
+// try {
+
+// } catch (error) {
+    
+// }

@@ -1,13 +1,17 @@
 const router = require('express').Router();
-const { setNews, getNews, modifyNewsApproval, setNewsPage, searchNews, getUnapprovedNewsPage, getApprovedNewsPage, removeNews } = require('../controllers/newsController');
+const { setNews, getNews, modifyNewsApproval, 
+        setNewsPage, searchNews, getUnapprovedNewsPage, 
+        getApprovedNewsPage, removeNews } = require('../controllers/newsController');
 const { authorize, admin, publisher } = require('../middlewares/authorize');
-
+const { validateNews } = require('../middlewares/validate'); 
+const { upload } = require('../middlewares/uploadFile'); 
+const { uploadToCloud } = require('../middlewares/uploadToCloud');
 
 router.route('/search')
     .get(authorize, searchNews);
 
 router.route('/')
-    .post(authorize, publisher, setNews) 
+    .post(authorize, publisher, upload, uploadToCloud, validateNews, setNews) 
     .get(authorize, publisher, setNewsPage);
 
 router.route('/:newsId')

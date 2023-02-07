@@ -23,20 +23,15 @@ module.exports.setNewsPage = async (req, res) => {
 
 module.exports.setNews = async (req, res) => {
     try {
-        // upload middleware for cloudinary and local upload
-        await uploadPhoto(req, res);
+        const { header, categoryName, newsText } = req.body;
         const userId = req.user.id;
-        const localFilePath = req.file.path;
-        if (req.file === undefined) return res.status(400).send({ message: "Please upload a file!" });
-        const cloudFileInfo = await cloudinary.uploader.upload(localFilePath);
-        const image = cloudFileInfo.secure_url;
-        await unlink(localFilePath);
+        const image = req.image;
         
         await runInTransaction(async (session) => {
-            const category = await fetchCategory(req.body.category, session) 
+            const category = await fetchCategory(categoryName, session) 
             const news = await createNews({
-                header: req.body.title,
-                newsText: req.body.article,
+                header: header,
+                newsText: newsText,
                 image: image,
                 category: category._id,
                 publisher: userId
@@ -44,6 +39,7 @@ module.exports.setNews = async (req, res) => {
             await updateUsersNewsById(news._id, userId, session);
             await updateCategoriesNewsById(news.category, news._id, session);
         });
+        
         res.status(201).json({ msg: 'News Successfully created' });
     } catch (error) {
         // tr a errr hole seta ekhane asbe re throw hoa

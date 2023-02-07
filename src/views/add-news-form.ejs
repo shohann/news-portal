@@ -46,9 +46,15 @@
         const file = e.target[3].files[0];
         const formData = new FormData();
 
-        formData.append("title", header);
-        formData.append("category", categoryName);
-        formData.append("article", newsText);
+        // old form name can be removed
+        // formData.append("title", header);
+        // formData.append("category", categoryName);
+        // formData.append("article", newsText);
+        // formData.append("file", file);
+
+        formData.append("header", header);
+        formData.append("categoryName", categoryName);
+        formData.append("newsText", newsText);
         formData.append("file", file);
 
         try {
@@ -60,7 +66,7 @@
             const data = await res.json();
             console.log(data);
             if (data) {
-                location.assign('/')
+                // location.assign('/')
             }
             ////////////////////////////////////////
 
