@@ -1,15 +1,13 @@
 const { fetchNewsCountByCategory } = require('../services/newsService');
 const { fetchCategoryByName } = require('../services/categoryService');
+const { getCategoryCacheByName } = require('../cache/categoryCache');
 
-// categories from redis can be used
 module.exports.pagination = async (req, res, next) => {
-
-    const { name, page, size } = req.query;
-    
     try {
-        const { _id } = await fetchCategoryByName(name);
-        const docsCount = await fetchNewsCountByCategory(_id); // approvals true only
-
+        const { name, page, size } = req.query;
+        let category = await getCategoryCacheByName(name)
+        if (!category) category = await fetchCategoryByName(name); // orFail
+        const docsCount = await fetchNewsCountByCategory(category._id); // orFail
         if (!page) page = 1;
         if (!size) size = 2;
 
@@ -26,8 +24,3 @@ module.exports.pagination = async (req, res, next) => {
     }
 };
 
-// if (!page) page = 1;
-    // if (!size) size = 1;
-
-    // const limit = parseInt(size);
-    // const skip = (page - 1) * size;

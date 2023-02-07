@@ -1,20 +1,9 @@
 const { News } = require('../models/news');
 
-// module.exports.createNews =  async (news) => {
-//     const newNews = new News(news);
-//     return await newNews.save();
-// };
-
-
-// With Transaction
 module.exports.createNews =  async (news, session) => {
     const newNews = new News(news);
     return await newNews.save({ session });
 };
-// module.exports.createNews = async (news, session) => {
-//     return await News.create(news, null, { session: session });
-// };
-
 
 module.exports.fetchNewsById = async (newsId) => {
     return await News.findOne({ _id: newsId })
@@ -27,23 +16,9 @@ module.exports.fetchNewsById = async (newsId) => {
                      });
 };
 
-
-
 module.exports.fetchAllNews = async () => {
     return News.find();
 };
-
-// module.exports.fetchPartialResult = async (arg) => {
-//     return await News.aggregate()
-//                      .search({
-//                         index: "searchNews",
-//                         text: {
-//                             query: arg,
-//                             path: ["header", "newsText"],
-//                             fuzzy: {}
-//                         }
-//                      })
-// }
 
 module.exports.fetchPartialResult = async (arg) => {
     return await News.aggregate()
@@ -69,14 +44,14 @@ module.exports.fetchPartialResult = async (arg) => {
                      });
 }
 
-module.exports.updateNewsCommentsById = async (commentId, newsId) => {
+module.exports.updateNewsCommentsById = async (commentId, newsId, session) => {
     return await News.updateOne({
         _id: newsId
     },{
         $push: {
             comments: commentId
         }
-    });
+    }, { session: session });
 };
 
 module.exports.updateNewsApprovalById = async (newsId, adminId) => {
@@ -89,8 +64,6 @@ module.exports.updateNewsApprovalById = async (newsId, adminId) => {
         }
     });
 };
-
-
 
 module.exports.fetchUnapprovedNews = async () => {
     return await News.find({ "approval.status": false })
@@ -122,9 +95,8 @@ module.exports.fetchLatestNews = async () => {
     return await News.find().sort({ publishTime: -1 }).limit(10)
 }
 
-// Transaction
-module.exports.deleteNewsById = async (newsId) => {
-    return await News.findByIdAndDelete(newsId)
+module.exports.deleteNewsById = async (newsId, session) => {
+    return await News.findByIdAndDelete(newsId).session(session)
 }
 
 module.exports.fetchNewsCountByCategory = async (categoryId) => {

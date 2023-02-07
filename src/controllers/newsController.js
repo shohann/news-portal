@@ -22,7 +22,8 @@ module.exports.setNewsPage = async (req, res) => {
 };
 
 module.exports.setNews = async (req, res) => {
-    try { 
+    try {
+        // upload middleware for cloudinary and local upload
         await uploadPhoto(req, res);
         const userId = req.user.id;
         const localFilePath = req.file.path;
@@ -30,6 +31,7 @@ module.exports.setNews = async (req, res) => {
         const cloudFileInfo = await cloudinary.uploader.upload(localFilePath);
         const image = cloudFileInfo.secure_url;
         await unlink(localFilePath);
+        //
         await runInTransaction(async (session) => {
             const category = await fetchCategory(req.body.category, session) 
             const news = await createNews({
@@ -55,7 +57,6 @@ module.exports.getNews = async (req, res) => {
     
     try {
         const news = await fetchNewsById(newsId);
-        // console.log(news);
         res.status(200).render('news-details', { news: news });
     } catch (error) {
         console.log(error);
@@ -99,16 +100,18 @@ module.exports.modifyNewsApproval = async (req, res) => {
 };
 
 module.exports.removeNews = async (req, res) => {
-    const newsId = req.params.newsId;
     try {
+        const newsId = req.params.newsId;
 
-        const { publisher, category } = await deleteNewsById(newsId);
-        await deleteCategoriesNewsById(category, newsId);
-        await deleteUsersNewsById(publisher, newsId);
-        
+        await runInTransaction(async (session) => {
+            const { publisher, category } = await deleteNewsById(newsId, session);
+            await deleteCategoriesNewsById(category, newsId, session);
+            await deleteUsersNewsById(publisher, newsId, session);
+        });
+
         res.status(200).json({
             msg: 'deleted'
-        })
+        });
     } catch (error) {
         console.log(error);
     }
@@ -117,7 +120,6 @@ module.exports.removeNews = async (req, res) => {
 module.exports.getUnapprovedNewsPage = async (req, res) => {
     try {
         const unapprovedNews = await fetchUnapprovedNews();
-        // console.log(unapprovedNews);
         res.status(200).render('unapproved-news', { news: unapprovedNews });
     } catch (error) {
         console.log(error);
@@ -128,7 +130,6 @@ module.exports.getUnapprovedNewsPage = async (req, res) => {
 module.exports.getApprovedNewsPage = async (req, res) => {
     try {
         const approvedNews = await fetchApprovedNews();
-        // console.log(approvedNews);
         res.status(200).render('approved-news', { news: approvedNews });
     } catch (error) {
         console.log(error);

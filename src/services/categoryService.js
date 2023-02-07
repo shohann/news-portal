@@ -5,13 +5,11 @@ module.exports.createCategory = async (category) => {
     return await newCategory.save();
 };
 
-// without transaction -> duplocacy -> for pagination
 module.exports.fetchCategoryByName = async (categoryName) => {
     return await Category.findOne({ categoryName: categoryName })
                          .select({ news: 0, __v: 0 }).orFail();
 };
 
-// Transaction
 module.exports.fetchCategory = async (categoryName, session) => {
     return await Category.findOne({ categoryName: categoryName }, null ,{ session: session })
                          .select({ news: 0, __v: 0 }).orFail()
@@ -26,9 +24,7 @@ module.exports.fetchAllCategory = async () => {
                          .select({ news: 0, __v: 0 });
 };
 
-
 module.exports.fetchCategoryNews = async (categoryName, limit, skip) => {
-    // accepts limit and skip
     return await Category.findOne({ categoryName: categoryName })
                          .select({ __v: 0 })
                          .populate({
@@ -37,20 +33,6 @@ module.exports.fetchCategoryNews = async (categoryName, limit, skip) => {
                             options: { limit: limit, skip: skip }
                         })
 };
-
-
-
-
-
-// module.exports.updateCategoriesNewsById = async (categoryId, newsId, session) => {
-//     return await Category.updateOne({
-//         _id: categoryId
-//     },{
-//         $push: {
-//             news: newsId
-//         }
-//     }, { session: session });
-// }
 
 module.exports.updateCategoriesNewsById = async (categoryId, newsId, session) => {
     return await Category.updateOne({
@@ -62,20 +44,14 @@ module.exports.updateCategoriesNewsById = async (categoryId, newsId, session) =>
     }, { session: session });
 }
 
-// module.exports.upd = async (categoryName, newsId, session) => {
-//     return await Category.findOneAndUpdate({ categoryName: categoryName})
-// }
-
-
-// Transaction
-module.exports.deleteCategoriesNewsById = async (categoryId, newsId) => {
+module.exports.deleteCategoriesNewsById = async (categoryId, newsId, session) => {
     return await Category.updateOne({
         _id: categoryId
     }, {
         $pull: {
             news: newsId
         }
-    });
+    }, { session: session });
 };
 
 

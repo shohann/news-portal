@@ -33,17 +33,6 @@ module.exports.updateUsersNewsById = async (newsId, userId) => {
     });
 };
 
-// module.exports.updateUsersCommentsById = async (commentId, userId) => {
-//     return await User.updateOne({
-//         _id: userId
-//     },{
-//         $push: {
-//             comments: commentId
-//         }
-//     });
-// };
-
-// With Transaction
 module.exports.updateUsersCommentsById = async (commentId, userId, session) => {
     return await User.updateOne({
         _id: userId
@@ -54,15 +43,13 @@ module.exports.updateUsersCommentsById = async (commentId, userId, session) => {
     }, { session: session });
 };
 
-
-// Transaction
-module.exports.deleteUsersNewsById = async (publisherId, newsId) => {
+module.exports.deleteUsersNewsById = async (publisherId, newsId, session) => {
     return await User.updateOne({
         _id: publisherId
     }, {
         $pull: {
             news: newsId
         }
-    })
+    }, { session: session })
 };
 

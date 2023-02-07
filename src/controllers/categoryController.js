@@ -1,11 +1,10 @@
 const { createCategory, fetchCategoryNews, 
         fetchAllCategory, fetchCategoriesWithCount,
   } = require('../services/categoryService');
-const { fetchNewsCountByCategory } = require('../services/newsService');
+const { getCategoriesCache, setCategoriesCache } = require('../cache/categoryCache')
 
 module.exports.getCategoryPage = async (req, res) => {
     try {
-        // why count
         const categories = await fetchCategoriesWithCount()
         res.status(200).render('categories', { categories: categories })
     } catch (error) {
@@ -15,25 +14,21 @@ module.exports.getCategoryPage = async (req, res) => {
 };
 
 module.exports.getCategoryNewsPage = async (req, res) => {
-    const current = req.query.name
-    const limit = req.limit;
-    const skip = req.skip;
-    const docsCount = req.docsCount;
-    const pageCount = req.pageCount;
-
-    // console.log(parseInt(req.query.page))
-
-    // console.log(limit)
-    // console.log(skip)
-    // console.log(docsCount)
-    // console.log(docsCount / limit)
-
     try {
-        const categories = await fetchAllCategory();
-        const { news, _id }  = await fetchCategoryNews(current, limit, skip); // only true status
-        // const newsCount = await fetchNewsCountByCategory(_id);
+        const current = req.query.name
+        const limit = req.limit;
+        const skip = req.skip;
+        const pageCount = req.pageCount;
+        let categories = await getCategoriesCache();
 
+        const { news }  = await fetchCategoryNews(current, limit, skip);
         if (!current) return res.status(200).redirect('/');
+
+        if (!categories) {
+            categories = await fetchAllCategory();
+            await setCategoriesCache(categories);
+        }
+
         res.status(200)
            .render('category-news', { 
                     categories: categories, 

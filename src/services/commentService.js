@@ -4,3 +4,11 @@ module.exports.createComment = async (comment) => {
     const newComment = new Comment(comment);
     return await newComment.save();
 };
+
+
+// module.exports.createComment = async (comment, session) => {
+//     const newComment = new Comment(comment);
+//     return await newComment.save({ session });
+// }
+
+

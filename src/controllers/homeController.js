@@ -9,6 +9,8 @@ const { getCategoriesCache, setCategoriesCache } = require('../cache/categoryCac
 // All news with pagination -> first page redis
 // whenwver a new new is being added then the cache will be deleted.
 
+// home is not returning approved news only
+
 module.exports.getHomePage = async (req, res) => {
     const latestNewsCache = await getLatestNewsCache();
     const categoriesCache = await getCategoriesCache();
@@ -23,8 +25,6 @@ module.exports.getHomePage = async (req, res) => {
 
         await setLatestNewsCache(news);
         await setCategoriesCache(categories);
-
-        // console.log(news)
         
         res.status(200).render('home', { news: news, categories: categories });
     } catch (error) {
