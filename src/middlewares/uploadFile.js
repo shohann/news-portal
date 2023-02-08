@@ -36,3 +36,11 @@ module.exports.upload = (req, res, next) => {
     });
 };
 
+
+// app.use(function (err, req, res, next) {
+//   if (err.code === 'LIMIT_FILE_SIZE') {
+//     res.send({ result: 'fail', error: { code: 1001, message: 'File is too big' } })
+//     return 
+//   }
+//   // Handle any other errors
+// })
