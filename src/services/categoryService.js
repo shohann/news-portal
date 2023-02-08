@@ -16,7 +16,7 @@ module.exports.fetchCategory = async (categoryName, session) => {
 }
 
 module.exports.fetchCategoriesWithCount = async () => {
-    return await Category.find().select({ news: 0, __v: 0, _id: 0 }) //admin category view
+    return await Category.find().select({ news: 0, __v: 0, _id: 0 }); 
 }
 
 module.exports.fetchAllCategory = async () => {

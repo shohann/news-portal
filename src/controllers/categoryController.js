@@ -1,19 +1,19 @@
 const { createCategory, fetchCategoryNews, 
         fetchAllCategory, fetchCategoriesWithCount,
   } = require('../services/categoryService');
-const { getCategoriesCache, setCategoriesCache } = require('../cache/categoryCache')
+const { getCategoriesCache, setCategoriesCache } = require('../cache/categoryCache');
+const { Conflict } = require('../utils/appError')
 
-module.exports.getCategoryPage = async (req, res) => {
+module.exports.getCategoryPage = async (req, res, next) => {
     try {
         const categories = await fetchCategoriesWithCount()
         res.status(200).render('categories', { categories: categories })
     } catch (error) {
-        console.log(error);
-        res.send(error)
+        next(error);
     }
 };
 
-module.exports.getCategoryNewsPage = async (req, res) => {
+module.exports.getCategoryNewsPage = async (req, res, next) => {
     try {
         const current = req.query.name
         const limit = req.limit;
@@ -36,12 +36,11 @@ module.exports.getCategoryNewsPage = async (req, res) => {
                     news: news, 
                     pageCount: pageCount });
     } catch (error) {
-        console.log(error);
-        res.send(error)
+        next(error);
     }
 };
 
-module.exports.setCategory = async (req, res) => {
+module.exports.setCategory = async (req, res, next) => {
     try {
         const { categoryName }= req.body;
         const newCategory = await createCategory({
@@ -53,7 +52,10 @@ module.exports.setCategory = async (req, res) => {
             message: `${newCategory.categoryName} category created`
         });
     } catch (error) {
-        console.log(error);
-        res.send(error)
+        if (error.code === 11000) {
+            next(new Conflict('Category already exsits'))
+        } else {
+            next(error)
+        }
     }
 };

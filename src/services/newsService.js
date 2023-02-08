@@ -13,7 +13,7 @@ module.exports.fetchNewsById = async (newsId) => {
                             path: 'user',
                             select: 'name'
                         }
-                     });
+                     }).orFail();
 };
 
 module.exports.fetchAllNews = async () => {
@@ -62,7 +62,7 @@ module.exports.updateNewsApprovalById = async (newsId, adminId) => {
             "approval.status": true,
             "approval.adminId": adminId
         }
-    });
+    }).orFail();
 };
 
 module.exports.fetchUnapprovedNews = async () => {
@@ -92,7 +92,7 @@ module.exports.fetchApprovedNews = async () => {
 };
 
 module.exports.fetchLatestNews = async () => {
-    return await News.find().sort({ publishTime: -1 }).limit(10)
+    return await News.find({"approval.status": true }).sort({ publishTime: -1 }).limit(10)
 }
 
 module.exports.deleteNewsById = async (newsId, session) => {

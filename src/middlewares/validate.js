@@ -26,19 +26,21 @@ module.exports.validateUser = (req, res, next) => {
 };
 
 module.exports.validateCategory = (req, res, next) => {
-    const { categoryName } = req.body;
-    const { error } = categoryValidation({
-        categoryName: categoryName
-    });
-
-    if (error) {
-        const message = error.message
-        return res.status(400).json({
-            success: false,
-            message: message
+    try {
+        const { categoryName } = req.body;
+        const { error } = categoryValidation({
+            categoryName: categoryName
         });
-    } else {
-        next();
+    
+        if (error) {
+            const message = error.message;
+            throw new BadRequest(message);
+        } else {
+            next();
+        }
+
+    } catch (error) {
+        next(error)
     }
 };
 
@@ -59,6 +61,7 @@ module.exports.validateComment = (req, res, next) => {
     }
 };
 
+// needs to add centerlized error -> file error -> try catch
 module.exports.validateNews =  async (req, res, next) => {
         const { header, categoryName, newsText } = req.body;
         const localPath = req.file.path

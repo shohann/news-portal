@@ -26,8 +26,6 @@ module.exports.authorize = (req, res, next) => {
         res.locals.user = decoded;
         next();
     } catch (error) {
-        // forbiden page here
-        // proper error handle
         // Token expire error, no token error, invaid token error
         res.locals.user = null;
         next();
@@ -35,13 +33,28 @@ module.exports.authorize = (req, res, next) => {
 };
 
 module.exports.admin = (req, res, next) => {
-    if (req.user.role !== 'admin') return res.status(403).send('Forbidden');
-    next();
+    try {
+        if (req.user.role !== 'admin') {
+            throw new Forbidden('Access Denied');
+        } else {
+            next();
+        }
+    } catch (error) {
+        next(error);
+    }
+    // if (req.user.role !== 'admin') return res.status(403).send('Forbidden');
 };
 
 module.exports.publisher = (req, res, next) => {
-    if (req.user.role !== 'publisher') return res.status(403).send('Forbidden');
-    next();
+    try {
+        if (req.user.role !== 'publisher') {
+            throw new Forbidden('Access Denied');
+        } else {
+            next();
+        }
+    } catch (error) {
+        next(error);
+    }
 };
 
 module.exports.user = (req, res, next) => {

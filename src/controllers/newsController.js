@@ -6,18 +6,18 @@ const { updateUsersNewsById, deleteUsersNewsById } = require('../services/userSe
 const { updateCategoriesNewsById, deleteCategoriesNewsById } = require('../services/categoryService');
 const { fetchAllCategory, fetchCategory } = require('../services/categoryService');
 const { runInTransaction } = require('../services/databaseTransaction');
+const { NotFound } = require('../utils/appError');
 
-module.exports.setNewsPage = async (req, res) => {
+module.exports.setNewsPage = async (req, res, next) => {
     try {
         const categories = await fetchAllCategory();
         res.status(200).render('add-news-form', { categories: categories })
     } catch (error) {
-        console.log(error);
-        res.send(error)
+        next(error)
     }
 };
 
-module.exports.setNews = async (req, res) => {
+module.exports.setNews = async (req, res, next) => {
     try {
         const { header, categoryName, newsText } = req.body;
         const userId = req.user.id;
@@ -36,60 +36,73 @@ module.exports.setNews = async (req, res) => {
             await updateCategoriesNewsById(news.category, news._id, session);
         });
 
-        res.status(201).json({ msg: 'News Successfully created' });
+        res.status(201).json({ 
+            success: true,
+            message: 'News Successfully created' 
+        });
     } catch (error) {
-        // tr a errr hole seta ekhane asbe re throw hoa
-        console.log(error);
-        res.send(error);
+        if (error.name === 'DocumentNotFoundError') {
+            next(new NotFound('Category not found'));
+        } else {
+            next(error);
+        }
     }
 };
 
-module.exports.getNews = async (req, res) => {
+module.exports.getNews = async (req, res, next) => {
     try {
         const newsId = req.params.newsId;
         const news = await fetchNewsById(newsId);
         res.status(200).render('news-details', { news: news });
     } catch (error) {
-        console.log(error);
-        res.send(error);
+        if (error.name === 'DocumentNotFoundError') {
+            next(new NotFound('News not found'));
+        } else {
+            next(error);
+        }
     }
 }
 
-module.exports.getAllNewsPage = async (req, res) => {
+module.exports.getAllNewsPage = async (req, res, next) => {
     // Home page alternative
     try {
         const news = await fetchAllNews();
         res.status(200).render('home', { news: news });
     } catch (error) {
-        console.log(error);
-        res.send(error);
+        next(error);
     }
 }
 
-module.exports.searchNews = async (req, res) => {
+module.exports.searchNews = async (req, res, next) => {
     try {
         const arg = req.query.arg;
         const result = await fetchPartialResult(arg);
         res.status(200).render('search-result', { result: result, arg: arg });
     } catch (error) {
-        console.log(error);
-        res.send(error)
+        next(error);
     }
 };
 
-module.exports.modifyNewsApproval = async (req, res) => {
+module.exports.modifyNewsApproval = async (req, res, next) => {
     try {
         const newsId = req.params.newsId;
         const adminId = req.user.id;
-        await updateNewsApprovalById(newsId, adminId)
-        res.status(200).json({ msg: "success" })
+        await updateNewsApprovalById(newsId, adminId);
+
+        res.status(200).json({ 
+            success: true,
+            message: "News approved" 
+        })
     } catch (error) {
-        console.log(error);
-        res.send(error);
+        if (error.name === 'DocumentNotFoundError') {
+            next(new NotFound('News Not Found'));
+        } else {
+            next(error)
+        }
     }
 };
 
-module.exports.removeNews = async (req, res) => {
+module.exports.removeNews = async (req, res, next) => {
     try {
         const newsId = req.params.newsId;
         await runInTransaction(async (session) => {
@@ -99,30 +112,33 @@ module.exports.removeNews = async (req, res) => {
         });
 
         res.status(200).json({
-            msg: 'deleted'
+            success: true,
+            message: 'News deleted'
         });
     } catch (error) {
-        console.log(error);
+        if (error.name === 'DocumentNotFoundError') {
+            next(error);
+        } else {
+            next(error);
+        }
     }
 };
 
-module.exports.getUnapprovedNewsPage = async (req, res) => {
+module.exports.getUnapprovedNewsPage = async (req, res, next) => {
     try {
         const unapprovedNews = await fetchUnapprovedNews();
         res.status(200).render('unapproved-news', { news: unapprovedNews });
     } catch (error) {
-        console.log(error);
-        res.send(error)
+        next(error);
     }
 };
 
-module.exports.getApprovedNewsPage = async (req, res) => {
+module.exports.getApprovedNewsPage = async (req, res, next) => {
     try {
         const approvedNews = await fetchApprovedNews();
         res.status(200).render('approved-news', { news: approvedNews });
     } catch (error) {
-        console.log(error);
-        res.send(error)
+        next(error);
     }
 };
 
