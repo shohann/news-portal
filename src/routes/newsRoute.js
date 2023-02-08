@@ -11,7 +11,7 @@ router.route('/search')
     .get(authorize, searchNews);
 
 router.route('/')
-    .post(authorize, publisher, upload, uploadToCloud, validateNews, setNews) 
+    .post(authorize, publisher, upload, validateNews, uploadToCloud, setNews) 
     .get(authorize, publisher, setNewsPage);
 
 router.route('/:newsId')

@@ -28,12 +28,9 @@ let uploadFileLocally = multer({
 module.exports.upload = (req, res, next) => {
     uploadFileLocally(req, res, function (error) {
         if (error) {
-            next(error)
-            // res.status(500).json({ msg: error.message }) // Bad request Error. above throw a custom error
+            next(error);
         } else if (!req.file) {
-          // console.log('Empty File')
           next(new BadRequest('You must provide a file'));
-          // return res.status(400).json({ msg: "You must provide a file"}) // its also a bad request
         }
         else return next();
     });

@@ -7,7 +7,7 @@ class ApplicationError extends Error {
         this.message = message;
     }
 
-    getCode() { return 400; }
+    getCode() { return 500; }
 };
 
 // for login only -> not for signup is db error

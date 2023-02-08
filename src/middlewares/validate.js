@@ -61,25 +61,25 @@ module.exports.validateComment = (req, res, next) => {
     }
 };
 
-// needs to add centerlized error -> file error -> try catch
 module.exports.validateNews =  async (req, res, next) => {
-        const { header, categoryName, newsText } = req.body;
-        const localPath = req.file.path
-        const { error } = newsValidation({
-            header: header,
-            categoryName: categoryName,
-            newsText: newsText,
-        });
-
-        if (error) {
-            await unlink(localPath);
-            const message = error.message
-            return res.status(400).json({
-                success: false,
-                message: message
+        const localPath = req.file.path;
+        try {
+            const { header, categoryName, newsText } = req.body;
+            const { error } = newsValidation({
+                header: header,
+                categoryName: categoryName,
+                newsText: newsText,
             });
-        } else {
-            next();
+    
+            if (error) {
+                const message = error.details.map(error => error.message);
+                throw new BadRequest(message);
+            } else {
+                next();
+            }
+        } catch (error) {
+            await unlink(localPath);
+            next(error)
         }
 };
 
