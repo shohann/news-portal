@@ -2,12 +2,13 @@ const { createComment } = require('../services/commentService');
 const { updateNewsCommentsById } = require('../services/newsService');
 const { updateUsersCommentsById } = require('../services/userService');
 const { runInTransaction } = require('../services/databaseTransaction');
+const { NotFound } = require('../utils/appError');
 
-module.exports.setComment = async (req, res) => {
+module.exports.setComment = async (req, res, next) => {
     try {
         const newsId = req.params.newsId;
         const commentText = req.body.commentText;
-        const userId = req.user.id;
+        const userId = req.user.id; 
 
         await runInTransaction(async (session) => {
             const { _id } = await createComment({
@@ -24,8 +25,11 @@ module.exports.setComment = async (req, res) => {
             message: `comment created`
         });
     } catch (error) {
-        console.log(error)
-        res.send(error)
+        if (error.name === 'DocumentNotFoundError') {
+            next(new NotFound(`News not found`));
+        } else {
+            next(error);
+        }
     }
 };
 

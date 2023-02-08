@@ -17,16 +17,14 @@
 
 <script>
   const authForm = document.getElementById('auth');
-
-
-   authForm.addEventListener('submit', async (e) => {
+  authForm.addEventListener('submit', async (e) => {
     e.preventDefault();
 
     const email = e.target[0].value;
     const password = e.target[1].value;
 
-    console.log(email);
-    console.log(password);
+    // console.log(email);
+    // console.log(password);
 
     try {
       const res = await fetch('/api/users/login', { 
@@ -35,10 +33,9 @@
         headers: {'Content-Type': 'application/json'}
       });
       const data = await res.json();
-      console.log('I am signing in');
-      console.log(data);
-
+  
       if (data) {
+        console.log(data);
         location.assign('/');
       }
     }
@@ -46,6 +43,5 @@
       console.log(err);
     }
 
-
-  });
+ });
 </script>

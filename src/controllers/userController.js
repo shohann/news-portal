@@ -1,9 +1,10 @@
 const { createUser, fetchUserByEmail, fetchUsersNewsById } = require('../services/userService');
 const { generateAccessToken } = require('../utils/jwt');
 const { getSaltRounds } = require('../utils/configs');
-const { genSalt, hash, compare } = require('bcrypt');
-const { setCustomError } = require('../utils/appError');
-const maxAge = 3 * 24 * 60 * 60;
+const { genSalt, hash, compare } = require('bcrypt'); // violate dependency injection & also cookie call
+const { Unauthorized, Conflict } = require('../utils/appError');
+
+const maxAge = 3 * 24 * 60 * 60; // constant
 
 module.exports.signUpPage = async (req, res) => {
     try {
@@ -14,13 +15,11 @@ module.exports.signUpPage = async (req, res) => {
     }
 };
 
-module.exports.signUp = async (req, res) => {
-    const name = req.body.name;
-    const email = req.body.email;
-    const password = req.body.password;
-    // amn user k sign in kora jabe jeta already ase
-    // duplicate er jonno error code kaj korse na
+module.exports.signUp = async (req, res, next) => {
     try {
+        const name = req.body.name;
+        const email = req.body.email;
+        const password = req.body.password;
         const salt = await genSalt(getSaltRounds());
         const hashedPassword = await hash(password, salt);
         const newUser = await createUser({
@@ -29,13 +28,19 @@ module.exports.signUp = async (req, res) => {
             password: hashedPassword
         });
         const token = generateAccessToken(newUser._id, email, newUser.role);
+
         res.cookie('jwt', token, { httpOnly: true, maxAge: maxAge * 1000 });
-        res.send(newUser);
+        res.status(201).json({
+            success: true,
+            message: 'User Created'
+        })
     } catch (error) {
-        if (error.code === '11000') {
-            res.send('User already have an account');
+        // Conflict Error or Other unknown error or Internal server error or orFail()-> DB error
+        // error code is from mongoDB duplicate resource creation
+        if (error.code === 11000) {
+            next(new Conflict('User already have an account')); // instance of known error
         } else {
-            res.send('Internal Server Error')
+            next(error); // this error is not app error -> its unknown
         }
     }
 };
@@ -55,20 +60,18 @@ module.exports.logIn = async (req, res, next) => {
     
     try {
         const user = await fetchUserByEmail(email);
-        if (!user || !(await compare(password, user.password))) throw setCustomError("InvalidEmailPassword", 401, "Invalid email or password");
+        if (!user || !(await compare(password, user.password))) {
+            throw new Unauthorized("Invalid email or password");
+        }
         const token = generateAccessToken(user._id,user.email, user.role);
         res.cookie('jwt', token, { httpOnly: true, maxAge: maxAge * 1000 });
         res.status(200).json({
             success: true,
-            token: token
+            message: 'Successfully LogedIn'
         });
     } catch (error) {
-        if (error.name === 'InvalidEmailPassword') {
-            next(error);
-        } else {
-            error.isOperational = false;
-            next(error);
-        }
+        // can be unauth or internal or other unknown or internal server
+        next(error); 
     }
 };
 

@@ -40,7 +40,7 @@ module.exports.updateUsersCommentsById = async (commentId, userId, session) => {
         $push: {
             comments: commentId
         }
-    }, { session: session });
+    }, { session: session }).orFail();
 };
 
 module.exports.deleteUsersNewsById = async (publisherId, newsId, session) => {

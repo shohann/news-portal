@@ -51,7 +51,7 @@ module.exports.updateNewsCommentsById = async (commentId, newsId, session) => {
         $push: {
             comments: commentId
         }
-    }, { session: session });
+    }, { session: session }).orFail(); 
 };
 
 module.exports.updateNewsApprovalById = async (newsId, adminId) => {

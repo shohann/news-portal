@@ -8,6 +8,7 @@ module.exports.handleError = (error, req, res, next) => {
     }
 
     return res.status(statusCode).json({
+        success: false,
         message: error.message
     });
 };

@@ -1,13 +1,6 @@
 
-setCustomError = (name, status, message) => {
-    const error = new Error(message);
-    error.isOperational = true,
-    error.name = name;
-    error.status = status;
 
-    return error;
-};
-
+//  ApplicationError is for other unknown errors only, Its not for unknown route
 class ApplicationError extends Error {
     constructor(message) {
         super();
@@ -17,12 +10,39 @@ class ApplicationError extends Error {
     getCode() { return 400; }
 };
 
+// for login only -> not for signup is db error
+class Unauthorized extends ApplicationError {
+    constructor(message) {
+        super(message);
+        this.name = 'Unauthorized';
+    }
+    getCode() { return 401; }
+}
+
+// HTTP 409 Conflict -> Duplication
+class  Conflict extends ApplicationError {
+    constructor(message) {
+        super(message);
+        this.name = 'Conflict';
+    }
+    getCode() { return 409; }
+}
+
+// 403 Forbidden
+class Forbidden extends ApplicationError {
+    constructor(message) {
+        super(message);
+        this.name = 'Forbidden';
+    }
+    getCode() { return 403; }
+}
+
 class BadRequest extends ApplicationError {
     constructor(message) {
         super(message);
         this.name = 'BadRequest';
     }
-    getCode() { return 401; }
+    getCode() { return 400; }
 };
 
 class NotFound extends ApplicationError {
@@ -35,8 +55,10 @@ class NotFound extends ApplicationError {
 };
 
 module.exports = {
-    setCustomError,
     ApplicationError,
+    Unauthorized,
+    Conflict,
     BadRequest,
-    NotFound
+    NotFound,
+    Forbidden
 }

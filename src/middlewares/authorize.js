@@ -1,5 +1,6 @@
 const { verify } = require('jsonwebtoken');
 const { getAuthSecret  } = require('../utils/configs');
+const { Forbidden } = require('../utils/appError')
 
 // module.exports.authorize =  (req, res, next) => {
 //     try {
@@ -27,6 +28,7 @@ module.exports.authorize = (req, res, next) => {
     } catch (error) {
         // forbiden page here
         // proper error handle
+        // Token expire error, no token error, invaid token error
         res.locals.user = null;
         next();
     }
@@ -43,6 +45,13 @@ module.exports.publisher = (req, res, next) => {
 };
 
 module.exports.user = (req, res, next) => {
-    if (req.user.role !== 'user') return res.status(403).send('Forbidden');
-    next();
-}
+    try {
+        if (!req.user) {
+            throw new Forbidden('Access Denied');
+        } else {
+            next();
+        }
+    } catch (error) {
+        next(error);
+    }
+};
