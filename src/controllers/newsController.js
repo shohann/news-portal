@@ -7,7 +7,6 @@ const { updateCategoriesNewsById, deleteCategoriesNewsById } = require('../servi
 const { fetchAllCategory, fetchCategory } = require('../services/categoryService');
 const { runInTransaction } = require('../services/databaseTransaction');
 
-
 module.exports.setNewsPage = async (req, res) => {
     try {
         const categories = await fetchAllCategory();

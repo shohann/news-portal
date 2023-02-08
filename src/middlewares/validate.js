@@ -6,21 +6,22 @@ const { BadRequest } = require('../utils/appError');
 const { unlink } = require('fs').promises;
 
 module.exports.validateUser = (req, res, next) => {
-    const { name, email, password } = req.body
-    const { error } = userValidation({
-        name: name,
-        email: email,
-        password: password
-    });
-
-    if (error) {
-        const messages = error.details.map(error => error.message);
-        return res.status(400).json({
-            success: false,
-            message: messages
+    try {
+        const { name, email, password } = req.body
+        const { error } = userValidation({
+            name: name,
+            email: email,
+            password: password
         });
-    } else {
-        next();
+    
+        if (error) {
+            const messages = error.details.map(error => error.message);
+            throw new BadRequest(messages);
+        } else {
+            next();
+        }
+    } catch (error) {
+        next(error);
     }
 };
 
