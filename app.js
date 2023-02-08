@@ -1,6 +1,7 @@
 const express = require('express');
 const cookieParser = require('cookie-parser');
-const { getPort, getDBUrl } = require('./src/utils/configs')
+const { getPort, getDBUrl } = require('./src/utils/configs');
+const { handleError, handleUnknownRoute } = require('./src/middlewares/handleError')
 const app = express();
 const port = getPort();
 const DBUrl = getDBUrl();
@@ -22,27 +23,29 @@ app.use('/api/news', newsRoute);
 app.use('/api/comments', commentRoute);
 app.use('/api/categories', categoryRoute);
 
-
 app.set('views', './src/views');
 app.set('view engine', 'ejs');
 
-app.all('*', (req, res, next) => {
-    res.status(404).json({
-      status: 'fail',
-      message: `Can't find ${req.originalUrl} on this server!`
-    });
-});
+// app.all('*', (req, res, next) => {
+//     res.status(404).json({
+//       status: 'fail',
+//       message: `Can't find ${req.originalUrl} on this server!`
+//     });
+// });
 
-app.use((err, req, res, next) => {
-    if (!err.status || !err.message) {
-        err.status = 500;
-        err.message = `Internal Server Error: ${err}`
-    }
+app.all('*', handleUnknownRoute);
+app.use(handleError);
 
-    res.status(err.status).json({
-        message: err.message,
-    });
-});
+// app.use((err, req, res, next) => {
+//     if (!err.status || !err.message) {
+//         err.status = 500;
+//         err.message = `Internal Server Error: ${err}`
+//     }
+
+//     res.status(err.status).json({
+//         message: err.message,
+//     });
+// });
 
 app.listen(port, async () => {
     try {
@@ -52,7 +55,6 @@ app.listen(port, async () => {
         console.log('MongoDB connected...');
         console.log(`Server listening on port ${port}`);
     } catch (error) {
-
         console.log(error);
     }
 });

@@ -24,18 +24,18 @@ module.exports.setNews = async (req, res) => {
         const userId = req.user.id;
         const image = req.image;
         
-        await runInTransaction(async (session) => {
-            const category = await fetchCategory(categoryName, session) 
-            const news = await createNews({
-                header: header,
-                newsText: newsText,
-                image: image,
-                category: category._id,
-                publisher: userId
-            }, session);
-            await updateUsersNewsById(news._id, userId, session);
-            await updateCategoriesNewsById(news.category, news._id, session);
-        });
+        // await runInTransaction(async (session) => {
+        //     const category = await fetchCategory(categoryName, session) 
+        //     const news = await createNews({
+        //         header: header,
+        //         newsText: newsText,
+        //         image: image,
+        //         category: category._id,
+        //         publisher: userId
+        //     }, session);
+        //     await updateUsersNewsById(news._id, userId, session);
+        //     await updateCategoriesNewsById(news.category, news._id, session);
+        // });
 
         res.status(201).json({ msg: 'News Successfully created' });
     } catch (error) {
