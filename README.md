@@ -13,6 +13,7 @@ An online news portal system
 - Server side schema validation
 - Rate Limiting
 - Caching
+- MVC
 
 
 ## Technology Stack:
