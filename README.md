@@ -10,7 +10,8 @@ An online news portal system
 - Full Text Search
 - Database transactions 
 - Server Side pagination 
-- Server side schema validation.
+- Server side schema validation
+- Rate Limiting
 - Caching
 
 
