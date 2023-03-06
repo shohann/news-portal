@@ -6,6 +6,8 @@ module.exports.getPort = () => config.get('port');
 
 module.exports.getDBUrl = () => config.get('DBUrl');
 
+module.exports.getRedisUrl = () => config.get('redisUrl');
+
 module.exports.getAuthSecret = () => config.get('authSecret');
 
 module.exports.getRedisHost = () => config.get('redisHost');
