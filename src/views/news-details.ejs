@@ -10,16 +10,18 @@
     <br>
     <br>
     <div >
-        <!-- This section must not see this -->
-        <form id="comment-section">
-            <label  for="comment">Add A comment</label>
-            <br>
-            <input id="comment-box" type="text" name="comment" required />
-            <br>
-            <br>
-            <button>Comment</button>
-        </form>
 
+        <% if (user) { %>
+            <form id="comment-section">
+                <label  for="comment">Add A comment</label>
+                <br>
+                <input id="comment-box" type="text" name="comment" required />
+                <br>
+                <br>
+                <button>Comment</button>
+            </form>
+        <% } %>
+    
         <% if (news.comments.length > 0) { %>
             <% for( let i = 0; i < news.comments.length; i++)  { %>
                 <div class="comment-txt">
@@ -31,6 +33,7 @@
             <p>No comments</p>
         <% } %>
 
+
     </div>
 </div>
 
@@ -39,7 +42,8 @@
     const commentSection = document.getElementById('comment-section');
     const newsId = location.pathname.split('/')[3];
 
-    commentSection.addEventListener('submit', async function (e) {
+    if (commentSection) {
+        commentSection.addEventListener('submit', async function (e) {
         e.preventDefault();
         const commentText = e.target[0].value;
 
@@ -59,5 +63,5 @@
             console.log(error);
         }
     });
-
+    }
 </script>
