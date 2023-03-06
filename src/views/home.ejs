@@ -10,8 +10,7 @@
 </div>
 
 <!-- <h1>Latest News</h1> -->
-<div style="margin: 25px;">
-    <h1>Latest News</h1>
+<div style="margin: 15px;">
     <div class="news-container" >
  
         <% for(let i = 0; i < news.length; i++ ){ %>
@@ -19,8 +18,8 @@
                 <img src="<%= news[i].image %>">
                 <h4><a href="/api/news/<%= news[i]._id %>"><%= news[i].header %><%= news[i].header %></a></h4>
    
-                <br>
-                <br>
+                <!-- <br>
+                <br> -->
             </div>
         <% } %>
     
